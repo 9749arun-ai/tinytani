@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0a0c12"/>
+<title>TinyTani</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{
+  --navy:#0a0c12;--card:#13151f;--card2:#181b27;--card3:#1e2130;
+  --border:rgba(255,255,255,0.06);--txt:#f2f4ff;--sub:#6870a0;--dim:#353860;
+  --pink:#ff5c9d;--pink-dark:#c8336e;--pink-glow:rgba(255,92,157,0.25);
+  --blue:#4d79ff;--orange:#ff6535;--red:#ff3d5a;--green:#00e5a0;--teal:#00c4bf;--yellow:#ffd700;--purple:#a855f7;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--navy);color:var(--txt);font-family:'Manrope',sans-serif;min-height:100vh;overflow-x:hidden;}
+.font-headline{font-family:'Space Grotesk',sans-serif;}
+.ms{font-family:'Material Symbols Outlined';font-size:22px;line-height:1;font-weight:400;font-style:normal;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;}
+.ms-fill{font-variation-settings:'FILL' 1;}
+.glass{background:rgba(20,22,35,0.6);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.1);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:12px;}
+.tab{display:none;}.tab.active{display:block;animation:fadeUp 0.3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.btn-pink{background:var(--pink);color:#0a0c12;font-weight:800;border:none;border-radius:12px;padding:14px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:15px;transition:all 0.2s;}
+.btn-pink:active{transform:scale(0.97);}
+input[type=number]{-moz-appearance:textfield;}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+input[type=range]{-webkit-appearance:none;background:var(--card2);border-radius:8px;height:6px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:var(--pink);border-radius:50%;cursor:pointer;}
+::-webkit-scrollbar{width:0;}
+#toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1e2130;border:1px solid var(--border);color:var(--txt);padding:10px 20px;border-radius:50px;font-size:13px;font-weight:600;z-index:10000;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;max-width:90vw;}
+#toast.show{opacity:1;}
+
+/* ---- EXERCISE ICON ANIMATIONS ---- */
+@keyframes ex-lift{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes ex-curl{0%,100%{transform:rotate(0deg) scaleX(1)}50%{transform:rotate(-30deg) scaleX(1)}}
+@keyframes ex-press{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-7px) scaleY(0.95)}}
+@keyframes ex-squat{0%,100%{transform:scaleY(1) translateY(0)}50%{transform:scaleY(0.78) translateY(5px)}}
+@keyframes ex-row{0%,100%{transform:translateX(0)}50%{transform:translateX(6px)}}
+@keyframes ex-kick{0%,100%{transform:rotate(0deg)}50%{transform:rotate(35deg)}}
+@keyframes ex-jump{0%,100%{transform:translateY(0) scaleX(1)}30%{transform:translateY(-10px) scaleX(0.9)}80%{transform:translateY(0) scaleX(1.05)}}
+@keyframes ex-run{0%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}100%{transform:rotate(-5deg)}}
+@keyframes ex-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.6;transform:scale(0.92)}}
+@keyframes ex-thrust{0%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}60%{transform:translateY(-8px)}}
+@keyframes ex-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+
+.anim-lift{animation:ex-lift 1.4s ease-in-out infinite;}
+.anim-curl{animation:ex-curl 1.2s ease-in-out infinite;}
+.anim-press{animation:ex-press 1.3s ease-in-out infinite;}
+.anim-squat{animation:ex-squat 1.5s ease-in-out infinite;}
+.anim-row{animation:ex-row 1.2s ease-in-out infinite;}
+.anim-kick{animation:ex-kick 1.0s ease-in-out infinite;}
+.anim-jump{animation:ex-jump 1.4s ease-in-out infinite;}
+.anim-run{animation:ex-run 0.6s ease-in-out infinite;}
+.anim-pulse{animation:ex-pulse 1.5s ease-in-out infinite;}
+.anim-thrust{animation:ex-thrust 1.1s ease-in-out infinite;}
+
+.ex-icon-wrap{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+.dish-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:12px;cursor:pointer;transition:all 0.15s;}
+.dish-card:active{transform:scale(0.97);background:var(--card3);}
+.cat-pill{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:none;white-space:nowrap;transition:all 0.2s;}
+.learn-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+.meal-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash" style="position:fixed;inset:0;z-index:999;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;">
+  <div style="width:80px;height:80px;border-radius:24px;background:linear-gradient(135deg,#ff5c9d,#c8336e);display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(255,92,157,0.4);">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+      <ellipse cx="10" cy="22" rx="8" ry="5" fill="white" opacity="0.9"/>
+      <rect x="18" y="20" width="8" height="4" rx="2" fill="white"/>
+      <ellipse cx="34" cy="22" rx="8" ry="5" fill="white" opacity="0.9"/>
+      <rect x="6" y="19" width="4" height="6" rx="2" fill="white" opacity="0.6"/>
+      <rect x="34" y="19" width="4" height="6" rx="2" fill="white" opacity="0.6"/>
+    </svg>
+  </div>
+  <div style="text-align:center;">
+    <div class="font-headline" style="font-size:28px;font-weight:900;color:var(--pink);">TinyTani</div>
+    <div style="font-size:13px;color:var(--sub);margin-top:4px;">47kg → 52kg · 6-Week Glow Up 🌸</div>
+  </div>
+  <div style="width:40px;height:3px;background:var(--card2);border-radius:2px;overflow:hidden;margin-top:10px;">
+    <div id="splash-bar" style="height:100%;width:0%;background:var(--pink);transition:width 1.6s ease;border-radius:2px;"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.95);flex-direction:column;align-items:center;justify-content:center;">
+  <button onclick="closeLightbox()" style="position:absolute;top:max(20px,env(safe-area-inset-top));right:20px;background:rgba(255,255,255,0.1);border:none;color:white;width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer;">✕</button>
+  <div id="lightbox-label" style="position:absolute;top:max(24px,env(safe-area-inset-top));left:20px;color:rgba(255,255,255,0.7);font-size:13px;font-weight:600;"></div>
+  <img id="lightbox-img" style="max-width:95vw;max-height:85vh;object-fit:contain;border-radius:12px;" src="" alt=""/>
+</div>
+<div id="toast"></div>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen" class="fixed inset-0 z-[1000] flex flex-col items-center justify-center px-6" style="position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,rgba(255,92,157,0.07),transparent 70%),#0a0c12">
+  <div style="width:100%;max-width:340px;animation:fadeUp 0.5s ease both">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div style="width:64px;height:64px;border-radius:16px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ff5c9d,#c8336e);box-shadow:0 0 20px rgba(255,92,157,0.4)">
+        <svg width="32" height="32" viewBox="0 0 44 44" fill="none"><ellipse cx="10" cy="22" rx="8" ry="5" fill="white" opacity="0.9"/><rect x="18" y="20" width="8" height="4" rx="2" fill="white"/><ellipse cx="34" cy="22" rx="8" ry="5" fill="white" opacity="0.9"/></svg>
+      </div>
+      <div class="font-headline" style="font-size:28px;font-weight:900;color:var(--pink);">TinyTani</div>
+      <div style="font-size:11px;color:var(--sub);margin-top:4px;">6-Week Glow Up 🌸</div>
+    </div>
+    <div id="auth-signin" style="display:flex;flex-direction:column;gap:12px;">
+      <input id="si-email" type="email" placeholder="Email address" style="width:100%;border-radius:14px;padding:14px 16px;font-size:14px;background:var(--card);border:1px solid var(--border);color:var(--txt);outline:none;" onkeydown="if(event.key==='Enter')document.querySelector('#si-pin-boxes input').focus()"/>
+      <div>
+        <div style="font-size:10px;color:var(--sub);font-weight:700;letter-spacing:1px;margin-bottom:8px;">6-DIGIT PIN</div>
+        <div style="display:flex;gap:8px;justify-content:space-between;" id="si-pin-boxes">
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+        </div>
+      </div>
+      <button onclick="authSignIn()" id="si-btn" class="btn-pink" style="width:100%;margin-top:4px;">Let's Glow 🌸</button>
+      <p id="si-err" style="color:var(--red);font-size:12px;text-align:center;font-weight:700;display:none;"></p>
+      <div style="text-align:center;margin-top:8px;"><button onclick="document.getElementById('auth-signup').style.display='flex';document.getElementById('auth-signin').style.display='none';" style="background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;">New? Create account →</button></div>
+    </div>
+    <div id="auth-signup" style="display:none;flex-direction:column;gap:12px;">
+      <input id="su-email" type="email" placeholder="Email address" style="width:100%;border-radius:14px;padding:14px 16px;font-size:14px;background:var(--card);border:1px solid var(--border);color:var(--txt);outline:none;"/>
+      <div>
+        <div style="font-size:10px;color:var(--sub);font-weight:700;letter-spacing:1px;margin-bottom:8px;">SET A 6-DIGIT PIN</div>
+        <div style="display:flex;gap:8px;justify-content:space-between;" id="su-pin-boxes">
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+          <input type="number" class="pin-input" style="width:44px;height:44px;border-radius:10px;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:18px;background:var(--card);border:1px solid var(--border);color:var(--pink);outline:none;-moz-appearance:textfield;" oninput="pinInput(this)" onkeydown="pinBack(event,this)"/>
+        </div>
+      </div>
+      <button onclick="authSignUp()" id="su-btn" class="btn-pink" style="width:100%;margin-top:4px;">Create Account</button>
+      <p id="su-err" style="color:var(--red);font-size:12px;text-align:center;font-weight:700;display:none;"></p>
+      <div style="text-align:center;margin-top:8px;"><button onclick="document.getElementById('auth-signin').style.display='flex';document.getElementById('auth-signup').style.display='none';" style="background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;">← Back to sign in</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header style="display:none;position:fixed;top:0;left:0;right:0;z-index:100;padding:max(12px,env(safe-area-inset-top)) 16px 12px;background:rgba(10,12,18,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);" id="main-header">
+  <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#ff5c9d,#c8336e);display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 44 44" fill="none"><ellipse cx="10" cy="22" rx="8" ry="5" fill="white" opacity="0.9"/><rect x="18" y="20" width="8" height="4" rx="2" fill="white"/><ellipse cx="34" cy="22" rx="8" ry="5" fill="white" opacity="0.9"/></svg>
+      </div>
+      <div>
+        <div class="font-headline" style="font-size:15px;font-weight:900;color:var(--pink);line-height:1;">TinyTani</div>
+        <div style="font-size:11px;color:var(--sub);" id="header-sub">Week 1 · 47kg → 52kg</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="sync-badge" onclick="manualResync()" style="font-size:9px;font-weight:800;color:var(--dim);cursor:pointer;">☁</span>
+      <div style="background:var(--card2);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--pink);" id="header-day-badge">🔥 Day 1</div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main id="main-app" style="display:none;padding-top:calc(max(12px,env(safe-area-inset-top)) + 60px);padding-bottom:calc(max(20px,env(safe-area-inset-bottom)) + 70px);">
+
+<!-- ==================== WORKOUT TAB ==================== -->
+<div class="tab active" id="tab-workout" style="padding:16px;">
+
+  <!-- Daily Cardio Banner -->
+  <div style="background:linear-gradient(135deg,rgba(255,92,157,0.15),rgba(200,51,110,0.1));border:1px solid rgba(255,92,157,0.25);border-radius:14px;padding:12px 16px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="font-size:28px;animation:ex-run 0.6s ease-in-out infinite;">🏃‍♀️</div>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:800;color:var(--pink);">DAILY CARDIO · 20 MINUTES</div>
+        <div style="font-size:11px;color:var(--sub);margin-top:2px;">Do this before or after workout every day</div>
+      </div>
+      <button id="cardio-done-btn" onclick="toggleCardioDone()" style="background:var(--card2);border:1px solid var(--border);color:var(--sub);padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;">○ Done</button>
+    </div>
+    <!-- Cardio options -->
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+      <span style="background:rgba(255,92,157,0.15);color:var(--pink);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">🚶 Brisk Walk</span>
+      <span style="background:rgba(255,92,157,0.15);color:var(--pink);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">🚴 Cycling</span>
+      <span style="background:rgba(255,92,157,0.15);color:var(--pink);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">🏊 Swimming</span>
+      <span style="background:rgba(255,92,157,0.15);color:var(--pink);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">💃 Dance</span>
+      <span style="background:rgba(255,92,157,0.15);color:var(--pink);padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;">🧘 Yoga Flow</span>
+    </div>
+  </div>
+
+  <!-- Hero Card with Unsplash -->
+  <div id="hero-card" style="border-radius:18px;overflow:hidden;height:200px;position:relative;margin-bottom:14px;">
+    <div id="hero-gradient" style="position:absolute;inset:0;background:linear-gradient(135deg,#c8336e,#ff5c9d);"></div>
+    <img id="hero-img" src="" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s;" onload="this.style.opacity=0.45" onerror="this.style.display='none'"/>
+    <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,0.7) 40%, transparent 100%);"></div>
+    <div style="position:absolute;inset:0;padding:18px;display:flex;flex-direction:column;justify-content:space-between;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+        <div class="glass" style="padding:5px 12px;border-radius:20px;align-self:flex-start;">
+          <span id="hero-phase" style="font-size:11px;font-weight:700;color:white;">✨ FOUNDATION</span>
+        </div>
+        <div class="glass" style="padding:5px 12px;border-radius:20px;">
+          <span style="font-size:11px;font-weight:700;color:white;" id="hero-week-badge">WEEK 1 / 6</span>
+        </div>
+      </div>
+      <div>
+        <div class="font-headline" id="hero-day-name" style="font-size:26px;font-weight:900;color:white;line-height:1.1;text-shadow:0 2px 8px rgba(0,0,0,0.5);">UPPER BODY</div>
+        <div id="hero-day-detail" style="font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;">Chest · Shoulders · Arms · Back</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week pills -->
+  <div style="overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;">
+    <div id="week-pills" style="display:flex;gap:8px;min-width:max-content;"></div>
+  </div>
+  <!-- Day pills -->
+  <div style="display:flex;gap:5px;margin-bottom:18px;" id="day-pills"></div>
+
+  <!-- Exercise List -->
+  <div id="exercise-list"></div>
+
+  <!-- Rest Timer -->
+  <div id="rest-timer" style="display:none;position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:500;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 24px;text-align:center;min-width:200px;box-shadow:0 8px 40px rgba(0,0,0,0.7);">
+    <div style="font-size:11px;color:var(--sub);font-weight:700;margin-bottom:6px;letter-spacing:1px;">REST</div>
+    <div style="position:relative;width:80px;height:80px;margin:0 auto;">
+      <svg width="80" height="80" viewBox="0 0 80 80" style="position:absolute;top:0;left:0;">
+        <circle cx="40" cy="40" r="34" fill="none" stroke="var(--card2)" stroke-width="6"/>
+        <circle id="timer-ring" cx="40" cy="40" r="34" fill="none" stroke="var(--pink)" stroke-width="6" stroke-linecap="round" stroke-dasharray="214" stroke-dashoffset="0" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset 1s linear;"/>
+      </svg>
+      <div id="timer-count" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:900;color:var(--pink);"></div>
+    </div>
+    <button onclick="stopTimer()" style="background:var(--card2);border:1px solid var(--border);color:var(--sub);padding:6px 16px;border-radius:8px;font-size:12px;cursor:pointer;margin-top:8px;">Skip</button>
+  </div>
+</div>
+
+<!-- ==================== FOOD TAB ==================== -->
+<div class="tab" id="tab-food" style="padding:16px;">
+  <div class="font-headline" style="font-size:22px;font-weight:900;margin-bottom:4px;">Food <span style="color:var(--pink);">Log</span></div>
+  <div style="font-size:12px;color:var(--sub);margin-bottom:14px;">Target: <span id="food-target-display" style="color:var(--pink);font-weight:700;">1800 kcal</span> · <span id="food-protein-target-display" style="color:var(--green);font-weight:700;">90g protein</span></div>
+
+  <!-- Calorie Ring -->
+  <div class="card" style="padding:16px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div style="position:relative;flex-shrink:0;">
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="46" fill="none" stroke="var(--card2)" stroke-width="9"/>
+          <circle id="cal-ring" cx="55" cy="55" r="46" fill="none" stroke="var(--pink)" stroke-width="9" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="289" transform="rotate(-90 55 55)" style="transition:stroke-dashoffset 0.8s ease;"/>
+          <text x="55" y="51" text-anchor="middle" fill="var(--txt)" font-family="Space Grotesk" font-size="20" font-weight="900" id="cal-ring-num">0</text>
+          <text x="55" y="66" text-anchor="middle" fill="var(--sub)" font-family="Manrope" font-size="10">kcal</text>
+        </svg>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px;">
+        <div><div style="font-size:10px;color:var(--sub);">PROTEIN</div><div style="font-size:16px;font-weight:900;font-family:'Space Grotesk',sans-serif;" id="food-protein-total">0g / 90g</div></div>
+        <div><div style="font-size:10px;color:var(--sub);">REMAINING</div><div style="font-size:16px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--green);" id="food-remaining-display">1800 kcal</div></div>
+        <div><div style="font-size:10px;color:var(--sub);">CARBS</div><div style="font-size:16px;font-weight:900;font-family:'Space Grotesk',sans-serif;" id="food-carbs-total">0g</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub-tabs: Meal Plan | Search | Log -->
+  <div style="display:flex;background:var(--card);border-radius:12px;padding:4px;margin-bottom:14px;gap:4px;">
+    <button id="ftab-plan" onclick="setFoodTab('plan')" style="flex:1;padding:9px 4px;border-radius:8px;background:var(--pink);color:#0a0c12;font-weight:800;border:none;cursor:pointer;font-size:12px;font-family:'Space Grotesk',sans-serif;">Meal Plan</button>
+    <button id="ftab-search" onclick="setFoodTab('search')" style="flex:1;padding:9px 4px;border-radius:8px;background:transparent;color:var(--sub);font-weight:700;border:none;cursor:pointer;font-size:12px;font-family:'Space Grotesk',sans-serif;">Search</button>
+    <button id="ftab-log" onclick="setFoodTab('log')" style="flex:1;padding:9px 4px;border-radius:8px;background:transparent;color:var(--sub);font-weight:700;border:none;cursor:pointer;font-size:12px;font-family:'Space Grotesk',sans-serif;">Today's Log</button>
+  </div>
+
+  <!-- MEAL PLAN -->
+  <div id="food-plan-section">
+    <!-- Day selector -->
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:14px;" id="meal-day-pills"></div>
+    <div id="meal-plan-content"></div>
+  </div>
+
+  <!-- SEARCH -->
+  <div id="food-search-section" style="display:none;">
+    <input id="dish-search" type="text" placeholder="Search 100+ dishes…" oninput="filterDishes()" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:12px 14px;font-size:14px;font-family:'Manrope',sans-serif;outline:none;margin-bottom:10px;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:12px;">
+      <button class="cat-pill" id="cat-all" onclick="setDishCat('all')" style="background:var(--pink);color:#0a0c12;">All</button>
+      <button class="cat-pill" id="cat-indian" onclick="setDishCat('indian')" style="background:var(--card2);color:var(--sub);border:1px solid var(--border);">🇮🇳 Indian</button>
+      <button class="cat-pill" id="cat-mediterranean" onclick="setDishCat('mediterranean')" style="background:var(--card2);color:var(--sub);border:1px solid var(--border);">🫒 Mediterranean</button>
+      <button class="cat-pill" id="cat-healthy" onclick="setDishCat('healthy')" style="background:var(--card2);color:var(--sub);border:1px solid var(--border);">💪 Healthy</button>
+      <button class="cat-pill" id="cat-salad" onclick="setDishCat('salad')" style="background:var(--card2);color:var(--sub);border:1px solid var(--border);">🥗 Salads</button>
+    </div>
+    <div id="dish-grid" style="display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;"></div>
+    <!-- Manual add -->
+    <div class="card" style="padding:14px;margin-top:14px;">
+      <div style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:10px;">MANUAL ADD</div>
+      <div style="display:flex;gap:6px;">
+        <input id="manual-name" type="text" placeholder="Name" style="flex:2;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:10px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+        <input id="manual-kcal" type="number" placeholder="kcal" style="flex:1;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:10px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+        <input id="manual-protein" type="number" placeholder="pro" style="flex:1;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:10px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+        <button onclick="logManual()" style="background:var(--pink);border:none;color:#0a0c12;padding:10px 14px;border-radius:8px;font-weight:800;cursor:pointer;font-size:16px;">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div id="food-log-section" style="display:none;">
+    <div class="card" style="padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:700;color:var(--sub);">TODAY'S LOG</div>
+        <button onclick="clearFoodLog()" style="background:none;border:none;color:var(--sub);font-size:12px;cursor:pointer;">Clear all</button>
+      </div>
+      <div id="food-log-list"><div style="text-align:center;padding:20px;color:var(--sub);font-size:13px;">Nothing logged yet 🍽️</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== PROGRESS TAB ==================== -->
+<div class="tab" id="tab-progress" style="padding:16px;">
+  <div class="font-headline" style="font-size:22px;font-weight:900;margin-bottom:16px;">Progress <span style="color:var(--pink);">✨</span></div>
+
+  <div class="card" style="padding:18px;margin-bottom:14px;">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <svg width="100" height="100" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="var(--card2)" stroke-width="8"/>
+        <circle id="wt-ring" cx="50" cy="50" r="42" fill="none" stroke="var(--pink)" stroke-width="8" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="264" transform="rotate(-90 50 50)" style="transition:stroke-dashoffset 1s ease;"/>
+        <text x="50" y="47" text-anchor="middle" fill="var(--txt)" font-family="Space Grotesk" font-size="17" font-weight="900" id="wt-current-display">47</text>
+        <text x="50" y="60" text-anchor="middle" fill="var(--sub)" font-family="Manrope" font-size="10">kg now</text>
+      </svg>
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div><div style="font-size:10px;color:var(--sub);">START</div><div style="font-size:17px;font-weight:900;font-family:'Space Grotesk',sans-serif;">47 kg</div></div>
+        <div><div style="font-size:10px;color:var(--sub);">GOAL</div><div style="font-size:17px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);">52 kg</div></div>
+        <div><div style="font-size:10px;color:var(--sub);">GAINED</div><div style="font-size:17px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--green);" id="wt-gained">0.0 kg</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);">
+      <input id="wt-input" type="number" step="0.1" placeholder="Today's weight (kg)" style="flex:1;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:12px;font-size:14px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+      <button onclick="logWeight()" class="btn-pink" style="padding:12px 18px;">Log</button>
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px;margin-bottom:14px;">
+    <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:10px;">WEIGHT TREND</div>
+    <div id="wt-chart" style="display:flex;align-items:flex-end;gap:4px;height:80px;"></div>
+  </div>
+
+  <div class="card" style="padding:14px;">
+    <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:12px;">PROGRESS PHOTOS 📸</div>
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;" id="photo-week-strip"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;" id="photo-grid"></div>
+    <button onclick="pushPhotosToCloud()" style="width:100%;margin-top:12px;padding:10px;border-radius:10px;background:rgba(77,121,255,0.1);border:1px solid rgba(77,121,255,0.25);color:#4d79ff;font-size:11px;font-weight:700;cursor:pointer;">☁ Push Photos to Cloud</button>
+  </div>
+</div>
+
+<!-- ==================== BURN TAB ==================== -->
+<div class="tab" id="tab-burn" style="padding:16px;">
+  <div class="font-headline" style="font-size:22px;font-weight:900;margin-bottom:4px;">Burn <span style="color:var(--pink);">Log</span> 🔥</div>
+  <div style="font-size:12px;color:var(--sub);margin-bottom:18px;">Track calories burned each day</div>
+
+  <!-- Log burn entry -->
+  <div class="card" style="padding:16px;margin-bottom:14px;">
+    <div style="font-size:12px;font-weight:700;color:var(--pink);margin-bottom:14px;">LOG TODAY'S BURN</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div>
+        <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">ACTIVITY</div>
+        <select id="burn-activity" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:11px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onchange="estimateBurn()">
+          <option value="walk">🚶 Brisk Walk</option>
+          <option value="run">🏃 Running</option>
+          <option value="cycle">🚴 Cycling</option>
+          <option value="hiit">⚡ HIIT</option>
+          <option value="strength">🏋️ Strength Training</option>
+          <option value="yoga">🧘 Yoga</option>
+          <option value="swim">🏊 Swimming</option>
+          <option value="dance">💃 Dance</option>
+          <option value="other">💪 Other</option>
+        </select>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--sub);margin-bottom:6px;">DURATION (mins)</div>
+        <input id="burn-mins" type="number" value="30" min="1" max="180" oninput="estimateBurn()" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:11px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+      </div>
+    </div>
+    <div style="background:var(--card2);border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <div>
+        <div style="font-size:11px;color:var(--sub);">ESTIMATED BURN</div>
+        <div style="font-size:30px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);" id="burn-estimate">120</div>
+        <div style="font-size:11px;color:var(--sub);">kcal</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:11px;color:var(--sub);">OVERRIDE (optional)</div>
+        <input id="burn-manual-kcal" type="number" placeholder="e.g. 250" style="background:var(--card);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:8px 10px;font-size:14px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;width:110px;text-align:center;margin-top:4px;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+      </div>
+    </div>
+    <input id="burn-note" type="text" placeholder="Note (e.g. 'Morning run at 6am')" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:11px 14px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;margin-bottom:12px;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+    <button onclick="logBurn()" class="btn-pink" style="width:100%;padding:14px;">Save Burn Entry 🔥</button>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+    <div class="card" style="padding:14px;text-align:center;">
+      <div style="font-size:10px;color:var(--sub);margin-bottom:4px;">TODAY</div>
+      <div style="font-size:26px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);" id="burn-today-total">0</div>
+      <div style="font-size:11px;color:var(--sub);">kcal burned</div>
+    </div>
+    <div class="card" style="padding:14px;text-align:center;">
+      <div style="font-size:10px;color:var(--sub);margin-bottom:4px;">ALL TIME</div>
+      <div style="font-size:26px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--orange);" id="burn-all-total">0</div>
+      <div style="font-size:11px;color:var(--sub);">kcal total</div>
+    </div>
+  </div>
+
+  <!-- Weekly Chart -->
+  <div class="card" style="padding:14px;margin-bottom:14px;">
+    <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:10px;">WEEKLY BURN</div>
+    <div id="burn-weekly-chart" style="display:flex;align-items:flex-end;gap:4px;height:80px;"></div>
+  </div>
+
+  <!-- Burn Log -->
+  <div class="card" style="padding:14px;">
+    <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:12px;">BURN HISTORY</div>
+    <div id="burn-log-list"><div style="text-align:center;padding:20px;color:var(--sub);font-size:13px;">No burns logged yet 🔥</div></div>
+  </div>
+
+  <!-- TDEE quick calc -->
+  <div class="card" style="padding:16px;margin-top:14px;">
+    <div style="font-size:12px;font-weight:700;color:var(--pink);margin-bottom:14px;">⚡ TDEE CALCULATOR</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">AGE</div><input id="tdee-age" type="number" value="22" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/></div>
+      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">HEIGHT (cm)</div><input id="tdee-height" type="number" value="162" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/></div>
+      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">WEIGHT (kg)</div><input id="tdee-weight" type="number" value="47" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/></div>
+      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">ACTIVITY</div><select id="tdee-activity" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:12px;font-family:'Manrope',sans-serif;outline:none;"><option value="1.2">Sedentary</option><option value="1.375" selected>Light active</option><option value="1.55">Moderate</option><option value="1.725">Very active</option></select></div>
+    </div>
+    <button onclick="calcTDEE()" class="btn-pink" style="width:100%;margin-bottom:14px;">Calculate</button>
+    <div id="tdee-result" style="background:var(--card2);border-radius:12px;padding:14px;display:flex;justify-content:space-around;text-align:center;">
+      <div><div style="font-size:20px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);" id="tdee-bmr">-</div><div style="font-size:10px;color:var(--sub);">BMR</div></div>
+      <div style="width:1px;background:var(--border);"></div>
+      <div><div style="font-size:20px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--green);" id="tdee-tdee">-</div><div style="font-size:10px;color:var(--sub);">TDEE</div></div>
+      <div style="width:1px;background:var(--border);"></div>
+      <div><div style="font-size:20px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--yellow);" id="tdee-gain">-</div><div style="font-size:10px;color:var(--sub);">+250 Gain</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== LEARN TAB ==================== -->
+<div class="tab" id="tab-learn" style="padding:16px;">
+  <div class="font-headline" style="font-size:22px;font-weight:900;margin-bottom:16px;">Learn <span style="color:var(--pink);">Hub</span></div>
+  <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;">
+    <button id="kt-body" onclick="showKnow('body')" style="background:var(--pink);color:#0a0c12;border:none;padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">👩 Women's Body</button>
+    <button id="kt-booty" onclick="showKnow('booty')" style="background:var(--card);color:var(--sub);border:1px solid var(--border);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">🍑 Best Booty</button>
+    <button id="kt-vaghealth" onclick="showKnow('vaghealth')" style="background:var(--card);color:var(--sub);border:1px solid var(--border);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">🌸 Vaginal Health</button>
+    <button id="kt-nutrition" onclick="showKnow('nutrition')" style="background:var(--card);color:var(--sub);border:1px solid var(--border);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">🍽️ Nutrition</button>
+    <button id="kt-hormones" onclick="showKnow('hormones')" style="background:var(--card);color:var(--sub);border:1px solid var(--border);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">🧬 Hormones</button>
+    <button id="kt-sleep" onclick="showKnow('sleep')" style="background:var(--card);color:var(--sub);border:1px solid var(--border);padding:8px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">😴 Sleep</button>
+  </div>
+
+  <div id="know-body">
+    <div class="learn-card"><div style="font-size:15px;font-weight:800;margin-bottom:10px;">Women's Body <span style="color:var(--pink);">Facts 💅</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🔥 Metabolism:</span> Women have 5-10% lower BMR than men due to less muscle mass. This means eating MORE protein and training to build muscle — not eating less. Undereating actually slows metabolism.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">💪 Muscle Growth:</span> Women build muscle at the same relative rate as men. You WON'T bulk up — low estrogen makes that physically impossible. Training only creates tone, shape, and strength.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🦴 Bone Density:</span> Women peak at ~25. Lifting weights NOW protects against osteoporosis later. Calcium + Vitamin D are non-negotiable. Impact exercise is the best bone-strengthener.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🧠 Mental Health:</span> Women produce less serotonin and clear it faster. Exercise is literally medicine — 30min movement = natural antidepressant, reduces anxiety, improves focus.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🌙 Cycle Sync:</span> Follicular phase (Week 1-2) = peak strength, train hard. Luteal phase (Week 3-4) = fatigue is normal, go lighter. Your cycle affects recovery too — listen to your body.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">💧 Hydration:</span> 2.0-2.5L water/day minimum. Hydration affects skin glow, muscle recovery, digestion, and hormone balance. Coffee and tea partially count.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🫀 Heart Health:</span> Women's hearts beat faster (70-80 bpm vs men's 60-70). Cardio reduces heart disease risk dramatically — even 20 minutes daily makes a massive difference.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🧬 Hormones + Food:</span> Fat is not the enemy. Healthy fats (avocado, nuts, ghee) are required to produce estrogen and progesterone. Very low fat diets cause hormonal issues and period problems.</div>
+    </div></div>
+  </div>
+
+  <div id="know-booty" style="display:none;">
+    <div class="learn-card"><div style="font-size:15px;font-weight:800;margin-bottom:10px;">Best Booty <span style="color:var(--pink);">Secrets 🍑</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🔥 ACTIVATE FIRST</div>Before any squat, do 2 sets of clamshells or donkey kicks. Without activation, quads dominate and glutes get left behind. This single tip doubles glute engagement.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🍑 HIP THRUSTS ARE #1</div>Scientific studies confirm hip thrusts activate glutes more than any other exercise. Do them 2x per week minimum. Add weight progressively every 1-2 weeks.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">📐 FULL RANGE OF MOTION</div>Go deep in squats — below parallel. The stretch at the bottom triggers maximum muscle fiber recruitment. Half squats = half results. Squeeze at the top every single rep.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">⚡ PROGRESSIVE OVERLOAD</div>Glutes adapt fast. Increase weight or reps every 1-2 weeks. If it doesn't challenge you, it doesn't change you. Use a workout log to track progress (this app!).</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🥩 PROTEIN IS NON-NEGOTIABLE</div>Without 90g+ protein/day, muscles can't grow even with perfect training. Muscle is built from amino acids. No protein = no curves. Period.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🌙 SLEEP TO GROW</div>80% of muscle repair and growth happens during deep sleep. Growth hormone peaks 10pm-2am. Sleep 7-8 hours before midnight for maximum booty gains.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🎯 ALL 3 GLUTE MUSCLES</div>Glute max (size) → hip thrusts, squats. Glute med (width/shape) → lateral walks, side lunges. Glute min (stability) → single-leg work. Train all three for a round, lifted look.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">📅 REST 48 HOURS</div>Train glutes 2-3x per week max. They need 48hrs to recover and grow. Daily glute training = breakdown, not growth. Rest days are growth days.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🩸 TRAIN WITH YOUR CYCLE</div>Week 1-2 (follicular) = train heavy, you're strongest. Week 3-4 (luteal) = go lighter, higher reps. This cycle-sync approach accelerates results significantly.</div>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:var(--pink);margin:14px 0 8px;">Exercise Rankings</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:8px;"><span>1. Hip Thrust / Glute Bridge</span><span style="color:var(--pink);">★★★★★</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:8px;"><span>2. Romanian Deadlift</span><span style="color:var(--pink);">★★★★★</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:8px;"><span>3. Bulgarian Split Squat</span><span style="color:var(--pink);">★★★★☆</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:8px;"><span>4. Sumo Squat</span><span style="color:var(--pink);">★★★★☆</span></div>
+      <div style="display:flex;justify-content:space-between;padding:8px 10px;background:var(--card2);border-radius:8px;"><span>5. Cable Kickback</span><span style="color:var(--pink);">★★★★☆</span></div>
+    </div></div>
+  </div>
+
+  <div id="know-vaghealth" style="display:none;">
+    <div class="learn-card"><div style="font-size:15px;font-weight:800;margin-bottom:10px;">Vaginal <span style="color:var(--pink);">Health 🌸</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🦠 THE MICROBIOME</div>Your vagina has its own ecosystem of good bacteria (Lactobacillus) that maintain pH 3.8-4.5. Antibiotics, douching, stress, and diet disrupt this. Probiotics help restore it.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🧼 CLEANING</div>Vagina is self-cleaning. Use warm water only on the vulva. Soaps — especially scented ones — disrupt pH and cause infections. Never douche. Less is more.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🍓 DIET CONNECTION</div>High sugar diet = more yeast infections. Probiotics (yogurt, kefir, kimchi) support good bacteria. Vitamin C boosts Lactobacillus. Staying hydrated keeps vaginal tissues healthy.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🩸 DISCHARGE IS NORMAL</div>Clear or white discharge that changes through your cycle = completely normal. It's your body's natural cleaner. Only worry if it's yellow/green, chunky, or has strong smell.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🧘 KEGEL EXERCISES</div>Squeeze pelvic floor (like stopping pee) for 5 sec, release. Do 3×10 daily. Benefits: better bladder control, more sensation during sex, prevents prolapse later in life.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🩲 UNDERWEAR</div>Cotton underwear is best — breathes and doesn't trap moisture. Avoid synthetic fabrics for long periods. Sleep without underwear occasionally. Always change after working out.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">💊 PROBIOTICS</div>Daily Lactobacillus probiotic supplements reduce recurrent yeast infections and BV by 70%. Essential after taking antibiotics. Look for Lactobacillus rhamnosus + reuteri strains.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">📅 CYCLE TRACKING</div>Track your period, discharge, pain, and mood changes. Irregular periods signal thyroid issues, PCOS, or high stress. Your cycle is your 5th vital sign — learn to read it.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🏃 POST-WORKOUT</div>Always change out of sweaty clothes quickly. Moist, warm environments breed yeast. Shower soon after workouts. Wear breathable athletic wear during exercise.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🩺 REGULAR CHECKS</div>Cervical screening from age 25. HPV vaccine if not done. Regular STI checks are normal healthcare. Know your body — early detection of anything is always better.</div>
+    </div></div>
+  </div>
+
+  <div id="know-nutrition" style="display:none;">
+    <div class="learn-card"><div style="font-size:15px;font-weight:800;margin-bottom:10px;">Eat to <span style="color:var(--pink);">Grow 🌸</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🎯 Surplus:</span> Gain muscle = 200-300 kcal above TDEE. Too much = fat gain. Too little = no muscle. 1800 kcal is your sweet spot for 47kg frame.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🥩 Protein Spread:</span> Spread 90g protein across 3-4 meals. Body absorbs max 35-40g per sitting. Eating it all at once = mostly wasted.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🌾 Carbs are Fuel:</span> Carbs power workouts. Cutting carbs = no energy to train = no muscle. Eat rice, oats, banana, sweet potato around workouts.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🥑 Healthy Fats:</span> Fats produce hormones. Eat nuts, ghee, avocado, coconut. Low fat = hormonal disruption. Don't fear fat, fear processed food.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🌿 Micronutrients:</span> Iron (periods deplete it — eat spinach, lentils), Calcium (dairy + sesame), Vitamin D (sunlight + eggs), Magnesium (dark choc, nuts — reduces cramps).</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">⏰ Timing:</span> Pre-workout carbs 30min before. Post-workout protein within 45min. Never skip breakfast — it sets your metabolism for the day.</div>
+    </div></div>
+  </div>
+
+  <div id="know-hormones" style="display:none;">
+    <div class="learn-card"><div style="font-size:15px;font-weight:800;margin-bottom:10px;">Your <span style="color:var(--pink);">Hormones 🧬</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🌸 ESTROGEN</div>Primary female hormone. Regulates cycle, supports bone density, distributes fat to hips/thighs/breasts. Peaks in week 2 — you'll feel strongest then. Lift heavy this week.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🌙 PROGESTERONE</div>Rises after ovulation (week 3-4). Causes bloating, fatigue, cravings — PMS is real and valid. Magnesium and B6 reduce these symptoms significantly. Don't push hard this week.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">💪 TESTOSTERONE</div>Yes, women have it (lower levels). Drives muscle growth, libido, confidence. Strength training naturally boosts testosterone — another reason to lift weights.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">😴 GROWTH HORMONE</div>Released during deep sleep. This is literally what builds your muscle and burns fat while you rest. Sleep 7-8hrs, go to bed before midnight.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">😰 CORTISOL</div>Stress hormone. Chronically elevated = belly fat storage, muscle breakdown, bad sleep, acne. Yoga (which you're doing!) is one of the most effective cortisol reducers.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🦋 THYROID</div>Controls metabolism. Hypothyroidism (common in women) = weight gain, fatigue, hair loss despite eating well. If you can't gain weight with proper food, get thyroid checked.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><div style="color:var(--pink);font-weight:800;margin-bottom:3px;">🍌 INSULIN</div>Released when you eat carbs. Not evil — it shuttles nutrients into muscle cells. Eat carbs around workouts for best muscle-building effect and minimal fat storage.</div>
+    </div></div>
+  </div>
+
+  <div id="know-sleep" style="display:none;">
+    <div class="learn-card"><div style="font-size:15px;font-weight:800;margin-bottom:10px;">Sleep = <span style="color:var(--pink);">Gains 😴</span></div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🌙 7-9 Hours:</span> Less than 6 hours = 60% less muscle protein synthesis. Perfect diet + hard training + bad sleep = still no results. Sleep is the most underrated gain.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">⏰ Before Midnight:</span> Growth hormone surges in the first 2-3 hours of sleep. Going to bed at 1am misses the most important recovery window entirely.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">📵 Phone Down 30min:</span> Blue light suppresses melatonin by 50%. Try journaling, gentle stretching, or reading instead. Put phone in another room if needed.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🌡️ Cool Room:</span> Body temperature must drop to initiate sleep. 18-20°C is ideal. Fan, lighter blankets, keep the room cool.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🥛 Pre-Sleep Nutrition:</span> Casein protein (paneer, cottage cheese, milk) before bed feeds muscles overnight. Avoid sugar which spikes insulin and disrupts deep sleep.</div>
+      <div style="background:var(--card2);border-radius:10px;padding:10px;line-height:1.6;"><span style="color:var(--pink);font-weight:700;">🔁 Consistency:</span> Same wake time every day — even weekends. Random sleep schedules destroy quality even if total hours are fine. Circadian rhythm is everything.</div>
+    </div></div>
+  </div>
+</div>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav id="main-nav" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(10,12,18,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0;padding-bottom:max(20px,env(safe-area-inset-bottom));">
+  <div style="display:flex;justify-content:space-around;align-items:center;width:100%;">
+    <button onclick="switchTab('workout')" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;">
+      <span class="ms ms-fill" id="ni-workout" style="color:var(--pink);">fitness_center</span>
+      <span id="nl-workout" style="font-size:10px;font-weight:700;color:var(--pink);">Workout</span>
+    </button>
+    <button onclick="switchTab('food')" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;">
+      <span class="ms" id="ni-food" style="color:var(--dim);">restaurant</span>
+      <span id="nl-food" style="font-size:10px;font-weight:700;color:var(--dim);">Food</span>
+    </button>
+    <button onclick="switchTab('progress')" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;">
+      <span class="ms" id="ni-progress" style="color:var(--dim);">trending_up</span>
+      <span id="nl-progress" style="font-size:10px;font-weight:700;color:var(--dim);">Progress</span>
+    </button>
+    <button onclick="switchTab('burn')" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;">
+      <span class="ms" id="ni-burn" style="color:var(--dim);">local_fire_department</span>
+      <span id="nl-burn" style="font-size:10px;font-weight:700;color:var(--dim);">Burn</span>
+    </button>
+    <button onclick="switchTab('learn')" style="display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;padding:4px 8px;">
+      <span class="ms" id="ni-learn" style="color:var(--dim);">school</span>
+      <span id="nl-learn" style="font-size:10px;font-weight:700;color:var(--dim);">Learn</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+// =============================================
+// CONFIG
+// =============================================
+const CLD_CLOUD = "dlcijbrpw";
+const CLD_PRESET = "arun_fitness";
+
+// ── SUPABASE CONFIG ──
+const SB_URL = "https://mvvupwbvvfsgdgkdzjxf.supabase.co";
+const SB_KEY = "sb_publishable_40WIh3cpD7Jgoffk5g9bfg__g6J7LSH";
+const sb = {
+  uid: null, token: null,
+  headers: () => ({"Content-Type":"application/json","apikey":SB_KEY,"Authorization":`Bearer ${sb.token||SB_KEY}`,"Prefer":"return=representation"}),
+  async refreshSession(){
+    const rt=localStorage.getItem("tt_refresh"); if(!rt)return false;
+    const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`,{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({refresh_token:rt})});
+    const d=await r.json();
+    if(d.access_token){sb.token=d.access_token;sb.uid=d.user.id;localStorage.setItem("tt_token",d.access_token);localStorage.setItem("tt_uid",d.user.id);if(d.refresh_token)localStorage.setItem("tt_refresh",d.refresh_token);return true;}
+    return false;
+  },
+  async from(table){return{_table:table,_filters:[],_order:null,
+    eq(c,v){this._filters.push(`${c}=eq.${v}`);return this;},
+    order(c,o={}){this._order=`${c}.${o.ascending===false?"desc":"asc"}`;return this;},
+    async select(cols="*"){let u=`${SB_URL}/rest/v1/${this._table}?select=${cols}`;if(this._filters.length)u+="&"+this._filters.join("&");if(this._order)u+="&order="+this._order;const r=await fetch(u,{headers:sb.headers()});return r.ok?await r.json():[];},
+    async insert(data){const r=await fetch(`${SB_URL}/rest/v1/${this._table}`,{method:"POST",headers:sb.headers(),body:JSON.stringify(data)});return r.ok?await r.json():null;},
+    async delete(){let u=`${SB_URL}/rest/v1/${this._table}`;if(this._filters.length)u+="?"+this._filters.join("&");const r=await fetch(u,{method:"DELETE",headers:sb.headers()});return r.ok;}
+  };}
+};
+
+// ── SUPABASE SYNC ──
+async function syncFromCloud(){
+  if(!sb.uid)return;
+  try{const wt=await(await sb.from("weight_logs")).eq("user_id",sb.uid).order("logged_at",{ascending:true}).select();if(wt&&wt.length){WLOG=wt.map(r=>({d:new Date(r.logged_at).toLocaleDateString("en-IN",{day:"numeric",month:"short"}),w:parseFloat(r.weight),id:r.id}));lsSet(SK.weight,WLOG);}}catch(e){console.warn("Weight sync:",e);}
+  try{const pp=await(await sb.from("progress_photos")).eq("user_id",sb.uid).select();if(pp&&pp.length){const merged={};pp.forEach(r=>{if(!r.photo_url)return;try{const a=JSON.parse(r.photo_url);if(typeof a==="object"&&!Array.isArray(a)){merged[r.week]=a;return;}}catch(e){}if(!merged[r.week])merged[r.week]={};merged[r.week]["Front"]=r.photo_url;});PROGRESS_PHOTOS=merged;lsSet(SK.photos,PROGRESS_PHOTOS);}}catch(e){console.warn("Photos sync:",e);}
+  try{const wp=await(await sb.from("workout_progress")).eq("user_id",sb.uid).select();if(wp&&wp.length){wp.forEach(r=>{const k=`tgt_w${r.week}d${r.day}`;lsSet(k,JSON.parse(r.exercise_key||"{}"));});}}catch(e){console.warn("Workout sync:",e);}
+  try{const fl=await(await sb.from("food_logs")).eq("user_id",sb.uid).order("created_at",{ascending:false}).select();if(fl&&fl.length){FOOD_LOG=fl.map(r=>({name:r.description,kcal:r.calories,protein:r.protein,carbs:0,fat:0,time:new Date(r.created_at).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"})}));lsSet(SK.food,FOOD_LOG);}}catch(e){console.warn("Food sync:",e);}
+}
+async function saveWeightToCloud(entry){if(!sb.uid)return;try{await(await sb.from("weight_logs")).insert({user_id:sb.uid,weight:entry.w,logged_at:new Date().toISOString().split("T")[0]});}catch(e){}}
+async function saveFoodToCloud(entry){if(!sb.uid)return;try{await(await sb.from("food_logs")).insert({user_id:sb.uid,description:entry.name,calories:entry.kcal,protein:entry.protein,logged_date:new Date().toISOString().split("T")[0]});}catch(e){}}
+async function saveWorkoutToCloud(week,day,data){if(!sb.uid)return;try{try{await(await sb.from("workout_progress")).eq("user_id",sb.uid).eq("week",week).eq("day",day).delete();}catch(e){}await(await sb.from("workout_progress")).insert({user_id:sb.uid,week,day,exercise_key:JSON.stringify(data)});}catch(e){}}
+async function savePhotoToCloud(week){if(!sb.uid||!PROGRESS_PHOTOS[week])return;try{try{await(await sb.from("progress_photos")).eq("user_id",sb.uid).eq("week",parseInt(week)).delete();}catch(e){}await(await sb.from("progress_photos")).insert({user_id:sb.uid,week:parseInt(week),photo_url:JSON.stringify(PROGRESS_PHOTOS[week])});}catch(e){}}
+async function pushPhotosToCloud(){if(!sb.uid){toast("Not logged in");return;}const weeks=Object.keys(PROGRESS_PHOTOS);if(!weeks.length){toast("No photos to push");return;}try{await sb.refreshSession();}catch(e){}let ok=0;for(const w of weeks){try{try{await(await sb.from("progress_photos")).eq("user_id",sb.uid).eq("week",parseInt(w)).delete();}catch(e){}await(await sb.from("progress_photos")).insert({user_id:sb.uid,week:parseInt(w),photo_url:JSON.stringify(PROGRESS_PHOTOS[w])});ok++;}catch(e){}}toast(`☁ ${ok}/${weeks.length} weeks pushed!`);}
+async function manualResync(){if(!sb.uid){toast("Not logged in");return;}toast("🔄 Syncing...",5000);try{await sb.refreshSession();}catch(e){}await syncFromCloud();WLOG=lsGet(SK.weight,[{d:"Start",w:47}]);FOOD_LOG=lsGet(SK.food,[]);PROGRESS_PHOTOS=lsGet(SK.photos,{});renderProgressTab();renderFoodRing();renderBurnTab();toast("✅ Synced!");}
+
+// =============================================
+// HERO IMAGES — Unsplash phase-based
+// =============================================
+const HERO_IMGS = {
+  foundation: [
+    "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80",
+    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&q=80",
+    "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?w=800&q=80"
+  ],
+  build: [
+    "https://images.unsplash.com/photo-1554284126-aa88f22d8b74?w=800&q=80",
+    "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80",
+    "https://images.unsplash.com/photo-1549060279-7e168fcee0c2?w=800&q=80"
+  ],
+  glowup: [
+    "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80",
+    "https://images.unsplash.com/photo-1507398941214-572c25f4b1dc?w=800&q=80",
+    "https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?w=800&q=80"
+  ]
+};
+
+// =============================================
+// MEAL PLAN — Mon-Sun, 5 meals/day with nutrition + reason
+// =============================================
+const MEAL_PLAN = {
+  0:{day:"Monday",theme:"High Protein Start",meals:[
+    {time:"7:00 AM",label:"Wake Up Drink",name:"Warm Lemon Water + Soaked Almonds (10)",emoji:"🍋",kcal:75,protein:3,carbs:4,fat:6,why:"Lemon water kickstarts metabolism and digestion. Almonds provide healthy fats and Vitamin E for skin glow. Eating within 30min of waking sets your metabolism for the day."},
+    {time:"8:30 AM",label:"Breakfast",name:"3 Scrambled Eggs + Whole Wheat Toast + 1 Banana",emoji:"🥚",kcal:480,protein:24,carbs:52,fat:16,why:"Eggs are a complete protein with all essential amino acids — critical for muscle building. Banana provides fast carbs to fuel your morning workout. Toast adds complex carbs for sustained energy."},
+    {time:"12:30 PM",label:"Lunch",name:"Paneer Bhurji (150g) + 2 Chapati + Cucumber Salad",emoji:"🧀",kcal:520,protein:28,carbs:48,fat:20,why:"Paneer is one of the best vegetarian protein sources — 18g per 100g. Chapati provides slow-release carbs. Cucumber aids digestion and hydration. This meal powers your afternoon."},
+    {time:"4:00 PM",label:"Snack",name:"Greek Yogurt (150g) + Mixed Berries + Walnuts",emoji:"🫐",kcal:220,protein:15,carbs:18,fat:10,why:"Greek yogurt has 2x the protein of regular yogurt plus probiotics for gut and vaginal health. Berries are antioxidants that fight inflammation from training. Walnuts support brain and hormonal health."},
+    {time:"7:30 PM",label:"Dinner",name:"Dal Makhani (1 cup) + Brown Rice (¾ cup) + Spinach Sabzi",emoji:"🫘",kcal:490,protein:18,carbs:72,fat:12,why:"Dal Makhani is a protein powerhouse with black lentils and kidney beans. Brown rice has more fibre and nutrients than white. Spinach provides iron that periods deplete. This combo is a complete amino acid profile."},
+  ]},
+  1:{day:"Tuesday",theme:"Mediterranean Day",meals:[
+    {time:"7:00 AM",label:"Wake Up",name:"Warm Turmeric Milk + 5 Dates",emoji:"🌿",kcal:190,protein:5,carbs:32,fat:6,why:"Turmeric has curcumin which reduces muscle inflammation from training. Dates are natural sugars that spike energy gently. Milk provides casein protein that slowly feeds muscles through the morning."},
+    {time:"8:30 AM",label:"Breakfast",name:"Overnight Oats with Full Milk + Chia Seeds + Honey",emoji:"🥣",kcal:420,protein:16,carbs:62,fat:10,why:"Oats are slow-release carbs — sustained energy for 3-4 hours. Chia seeds provide omega-3 fatty acids that reduce inflammation and support hormonal health. This breakfast is anti-inflammatory powerhouse."},
+    {time:"1:00 PM",label:"Lunch",name:"Grilled Chicken Shawarma in Pita + Hummus + Greek Salad",emoji:"🌯",kcal:560,protein:38,carbs:44,fat:18,why:"Chicken breast is the leanest complete protein — 31g per 100g. Hummus (chickpeas) adds plant protein and fibre. Greek salad with olive oil provides heart-healthy fats. Perfect post-workout muscle meal."},
+    {time:"4:30 PM",label:"Snack",name:"Peanut Butter on Apple Slices + 1 Glass Milk",emoji:"🍎",kcal:310,protein:12,carbs:34,fat:14,why:"Peanut butter provides protein + healthy fats that keep you full. Apple gives fibre and natural sugar. Milk before the evening boosts calcium for bone density. This snack prevents evening overeating."},
+    {time:"8:00 PM",label:"Dinner",name:"Baked Salmon (150g) + Quinoa (½ cup) + Roasted Veggies",emoji:"🐟",kcal:510,protein:40,carbs:38,fat:16,why:"Salmon is the richest food source of omega-3 — directly reduces DOMS (delayed muscle soreness). Quinoa is a complete protein grain. Roasted veg provides micronutrients for hormonal balance. Perfect recovery dinner."},
+  ]},
+  2:{day:"Wednesday",theme:"Indian Comfort + Power",meals:[
+    {time:"7:00 AM",label:"Wake Up",name:"Coconut Water + Handful Cashews",emoji:"🥥",kcal:160,protein:5,carbs:22,fat:7,why:"Coconut water is nature's electrolyte drink — replenishes sodium, potassium, magnesium lost overnight. Cashews provide zinc which supports immunity and hormone production. Perfect start on a cardio day."},
+    {time:"8:30 AM",label:"Breakfast",name:"2 Moong Dal Chilla + Green Chutney + Dahi (½ cup)",emoji:"💚",kcal:310,protein:18,carbs:34,fat:8,why:"Moong dal chilla is one of the best protein-to-calorie breakfast ratios for Indian food. Moong dal is easy to digest and has a full amino acid profile. Dahi (curd) adds probiotics for gut health."},
+    {time:"1:00 PM",label:"Lunch",name:"Rajma Chawal + Onion Raita + Pickle",emoji:"🍚",kcal:520,protein:18,carbs:80,fat:8,why:"Rajma (kidney beans) + rice is a nutritionally complete combination that provides all essential amino acids. This is literally a whole-body fuel meal. Raita cools digestion and adds beneficial bacteria."},
+    {time:"4:00 PM",label:"Snack",name:"Protein Smoothie — Banana + Milk + Peanut Butter + Oats",emoji:"🥤",kcal:380,protein:18,carbs:52,fat:10,why:"This smoothie is your best pre-workout or post-workout drink on a budget. Banana + oats for carbs and energy. Peanut butter for protein and fats. Milk for casein. Blend everything, drink within 30min of training."},
+    {time:"7:30 PM",label:"Dinner",name:"Palak Paneer (1 cup) + 2 Phulka + Sprout Salad",emoji:"🥬",kcal:480,protein:22,carbs:44,fat:18,why:"Spinach (palak) is one of the richest sources of iron and folate — essential for women. Paneer provides muscle-building protein. Phulka is lighter than paratha. Sprouts add digestive enzymes and live protein."},
+  ]},
+  3:{day:"Thursday",theme:"High Calorie Build Day",meals:[
+    {time:"7:00 AM",label:"Wake Up",name:"Full Milk (1 glass) + 2 Boiled Eggs",emoji:"🥛",kcal:290,protein:20,carbs:12,fat:16,why:"Starting with protein and fat immediately puts your body in anabolic (muscle-building) mode. Full milk provides casein + whey proteins. Boiled eggs have the highest biological value of any food — 97% protein absorption."},
+    {time:"9:00 AM",label:"Breakfast",name:"Aloo Paratha (2) + White Butter + Dahi",emoji:"🫓",kcal:680,protein:16,carbs:90,fat:24,why:"On heavy training days you need more carbs and calories. Paratha + butter is a calorie-dense meal that fuels long workouts. The fat slows carb absorption for sustained energy. Don't fear this meal — it's fuel."},
+    {time:"1:30 PM",label:"Lunch",name:"Chicken Curry (150g) + Rice (1 cup) + Dal Soup + Salad",emoji:"🍗",kcal:620,protein:42,carbs:62,fat:16,why:"This is your biggest protein meal of the week. Chicken provides 31g protein per 100g. Combined with rice and dal this is the perfect post-workout muscle meal. The salad adds fibre to prevent blood sugar spike."},
+    {time:"4:30 PM",label:"Snack",name:"Banana + Almond Butter Toast + Cottage Cheese",emoji:"🍌",kcal:420,protein:18,carbs:48,fat:16,why:"Banana is the perfect pre-workout fruit — fast energy, potassium for muscle contraction, and B6 for protein metabolism. Almond butter on toast bridges you to dinner without energy crash. Cottage cheese is slow-digesting protein."},
+    {time:"8:00 PM",label:"Dinner",name:"Tandoori Chicken (2 pcs) + Tabbouleh + Grilled Veggies + Pita",emoji:"🔥",kcal:480,protein:42,carbs:36,fat:14,why:"Tandoori chicken is high protein, low fat, high flavour. Tabbouleh (bulgur + herbs) provides complex carbs and antioxidants. This light but protein-rich dinner promotes overnight muscle repair without excess fat storage."},
+  ]},
+  4:{day:"Friday",theme:"Mediterranean Lean",meals:[
+    {time:"7:00 AM",label:"Wake Up",name:"Green Tea + Handful Walnuts + 3 Dates",emoji:"🍵",kcal:180,protein:4,carbs:24,fat:9,why:"Green tea contains EGCG which boosts fat metabolism by 4-5%. Walnuts are the richest plant source of omega-3 fatty acids — reduces inflammation and supports brain health. Dates provide natural morning energy."},
+    {time:"8:30 AM",label:"Breakfast",name:"Shakshuka (2 eggs in tomato sauce) + Wholegrain Pita",emoji:"🍳",kcal:410,protein:20,carbs:42,fat:14,why:"Shakshuka is a Mediterranean powerhouse — eggs in tomato provide lycopene (antioxidant), complete protein, and vitamins A,D,E,K. Tomatoes cooked in olive oil have 5x more absorbable lycopene than raw. Perfect hormone-supporting breakfast."},
+    {time:"1:00 PM",label:"Lunch",name:"Falafel (5 pcs) + Hummus + Fattoush Salad + Pita",emoji:"🟢",kcal:580,protein:20,carbs:72,fat:22,why:"Falafel is chickpeas deep-fried but surprisingly high in protein and fibre. Hummus adds more chickpea protein. Fattoush with pomegranate provides antioxidants. The olive oil dressing delivers healthy monounsaturated fats."},
+    {time:"4:00 PM",label:"Snack",name:"Paneer Tikka (6 pcs) + Mint Chutney",emoji:"🔥",kcal:330,protein:22,carbs:8,fat:24,why:"Paneer tikka is grilled — not fried — making it high protein and moderate fat. The spices (cumin, coriander, turmeric) are anti-inflammatory. This is a great pre-workout snack on a Friday."},
+    {time:"8:00 PM",label:"Dinner",name:"Grilled Sea Bass (150g) + Roasted Sweet Potato + Caprese Salad",emoji:"🐟",kcal:430,protein:36,carbs:32,fat:14,why:"Sea bass is light, easily digestible protein — perfect before sleep. Sweet potato provides beta-carotene for skin health and slow carbs for overnight muscle recovery. Caprese (tomato + mozzarella) adds calcium and vitamin C."},
+  ]},
+  5:{day:"Saturday",theme:"Full Body Fuel",meals:[
+    {time:"7:30 AM",label:"Wake Up",name:"Mango Lassi (1 glass) + Boiled Eggs (2)",emoji:"🥭",kcal:380,protein:18,carbs:42,fat:12,why:"Saturday = full body day = more fuel needed. Mango lassi gives fast carbs + protein from yogurt + probiotics. Eggs add complete protein. This bigger wake-up meal prepares you for your longest workout of the week."},
+    {time:"9:00 AM",label:"Breakfast",name:"Masala Dosa + Sambar + Coconut Chutney",emoji:"🫓",kcal:380,protein:10,carbs:62,fat:12,why:"Dosa is fermented — fermentation increases bioavailability of nutrients and adds probiotics. Sambar is loaded with lentil protein, vegetables, and tamarind antioxidants. This is one of the most nutritionally complete breakfasts in Indian cuisine."},
+    {time:"1:30 PM",label:"Lunch",name:"Chole (1 cup) + 2 Bhatura + Onion Salad + Lassi",emoji:"🫘",kcal:680,protein:20,carbs:96,fat:20,why:"Saturday deserves a treat meal that still delivers nutrition. Chole (chickpeas) have 19g protein per cup. Bhatura is calorie-dense — perfect on a full body training day when you've burned the most. Lassi restores gut bacteria."},
+    {time:"4:30 PM",label:"Snack",name:"Quinoa Bowl + Avocado + Cherry Tomatoes + Olive Oil",emoji:"🌾",kcal:310,protein:10,carbs:36,fat:14,why:"Quinoa is the only grain with a complete amino acid profile. Avocado provides potassium (more than banana) which reduces muscle cramps. Cherry tomatoes add Vitamin C that aids iron absorption. This snack accelerates recovery."},
+    {time:"8:00 PM",label:"Dinner",name:"Grilled Prawns (8) + Garlic Brown Rice + Steamed Broccoli",emoji:"🦐",kcal:420,protein:32,carbs:46,fat:8,why:"Prawns are extremely high protein, very low fat — ideal Saturday dinner after a big calorie day. Garlic has allicin which improves circulation and muscle recovery. Broccoli is the most nutrient-dense vegetable — Vitamin C, K, folate, iron."},
+  ]},
+  6:{day:"Sunday",theme:"Rest + Recovery",meals:[
+    {time:"8:00 AM",label:"Wake Up",name:"Golden Milk (Turmeric + Honey + Milk) + Banana",emoji:"🌿",kcal:220,protein:8,carbs:34,fat:6,why:"Sunday is recovery day — anti-inflammatory focus. Turmeric milk reduces soreness from the week's training. Honey is nature's recovery fuel. Banana replenishes glycogen. Start slow, no rush today."},
+    {time:"10:00 AM",label:"Brunch",name:"Vegetable Omelette (3 eggs) + Avocado Toast + Fresh Juice",emoji:"🥚",kcal:520,protein:22,carbs:38,fat:26,why:"A relaxed Sunday brunch that hits all macros. 3-egg omelette with vegetables provides complete protein + micronutrients. Avocado adds oleic acid (same fat as olive oil) — reduces inflammation. Fresh juice replenishes vitamins."},
+    {time:"1:30 PM",label:"Lunch",name:"Khichdi + Dahi + Papad + Pickle",emoji:"🍚",kcal:380,protein:14,carbs:62,fat:8,why:"Khichdi is Ayurveda's perfect recovery food — easy to digest, gut-healing, anti-inflammatory. The combination of rice + moong dal provides all essential amino acids. Dahi adds probiotics. Eat this when you're tired or sore."},
+    {time:"4:00 PM",label:"Snack",name:"Dark Chocolate (30g) + Almonds + Chamomile Tea",emoji:"🍫",kcal:260,protein:5,carbs:18,fat:18,why:"Dark chocolate (70%+) contains magnesium which reduces muscle cramps and improves sleep quality. It also boosts serotonin — literally makes you happier. Almonds add more magnesium. Chamomile tea reduces cortisol for better Sunday rest."},
+    {time:"7:30 PM",label:"Dinner",name:"Soup (Lentil/Tomato) + Grilled Paneer + 1 Chapati",emoji:"🍲",kcal:390,protein:22,carbs:38,fat:14,why:"Light Sunday dinner supports overnight recovery. Soup is easy on digestion. Lentils provide plant protein and iron. Paneer adds muscle-building protein without heaviness. Going to bed not too full = better sleep quality = better gains."},
+  ]}
+};
+
+// =============================================
+// DISHES DATABASE (100)
+// =============================================
+const DISHES = [
+  {name:"Masala Dosa",cat:"indian",kcal:220,protein:5,carbs:38,fat:7,emoji:"🫓"},
+  {name:"Idli (2 pcs)",cat:"indian",kcal:120,protein:4,carbs:24,fat:1,emoji:"⚪"},
+  {name:"Sambar (1 cup)",cat:"indian",kcal:95,protein:5,carbs:14,fat:2,emoji:"🍲"},
+  {name:"Poha",cat:"indian",kcal:250,protein:5,carbs:48,fat:5,emoji:"🌾"},
+  {name:"Paneer Bhurji",cat:"indian",kcal:310,protein:18,carbs:6,fat:24,emoji:"🧀"},
+  {name:"Dal Tadka (1 cup)",cat:"indian",kcal:175,protein:10,carbs:28,fat:4,emoji:"🫘"},
+  {name:"Dal Makhani",cat:"indian",kcal:310,protein:12,carbs:35,fat:14,emoji:"🫘"},
+  {name:"Rice (1 cup cooked)",cat:"indian",kcal:200,protein:4,carbs:44,fat:0,emoji:"🍚"},
+  {name:"Chapati (1 roti)",cat:"indian",kcal:100,protein:3,carbs:20,fat:2,emoji:"🫓"},
+  {name:"Aloo Paratha",cat:"indian",kcal:290,protein:7,carbs:42,fat:10,emoji:"🫓"},
+  {name:"Rajma Chawal",cat:"indian",kcal:380,protein:14,carbs:68,fat:5,emoji:"🍚"},
+  {name:"Palak Paneer",cat:"indian",kcal:270,protein:14,carbs:10,fat:20,emoji:"🥬"},
+  {name:"Chole Bhature",cat:"indian",kcal:490,protein:16,carbs:72,fat:15,emoji:"🍽️"},
+  {name:"Chicken Curry (100g)",cat:"indian",kcal:240,protein:26,carbs:6,fat:12,emoji:"🍗"},
+  {name:"Egg Bhurji (2 eggs)",cat:"indian",kcal:210,protein:14,carbs:4,fat:15,emoji:"🥚"},
+  {name:"Upma",cat:"indian",kcal:280,protein:8,carbs:46,fat:7,emoji:"🌾"},
+  {name:"Pesarattu (2 pcs)",cat:"indian",kcal:180,protein:10,carbs:28,fat:3,emoji:"💚"},
+  {name:"Uttapam",cat:"indian",kcal:170,protein:5,carbs:30,fat:4,emoji:"🫓"},
+  {name:"Khichdi",cat:"indian",kcal:280,protein:10,carbs:50,fat:5,emoji:"🍚"},
+  {name:"Lassi (plain)",cat:"indian",kcal:165,protein:8,carbs:20,fat:6,emoji:"🥛"},
+  {name:"Paneer Tikka (6 pcs)",cat:"indian",kcal:330,protein:22,carbs:8,fat:24,emoji:"🔥"},
+  {name:"Tandoori Chicken (2 pcs)",cat:"indian",kcal:280,protein:38,carbs:4,fat:12,emoji:"🍗"},
+  {name:"Mixed Veg Sabzi",cat:"indian",kcal:120,protein:4,carbs:16,fat:5,emoji:"🥦"},
+  {name:"Dahi (1 cup)",cat:"indian",kcal:120,protein:8,carbs:10,fat:5,emoji:"🥛"},
+  {name:"Moong Dal Chilla (2)",cat:"indian",kcal:210,protein:12,carbs:30,fat:5,emoji:"💚"},
+  {name:"Sprout Salad",cat:"indian",kcal:130,protein:9,carbs:20,fat:1,emoji:"🌱"},
+  {name:"Boiled Chana",cat:"indian",kcal:190,protein:10,carbs:30,fat:3,emoji:"🟤"},
+  {name:"Fish Curry (100g)",cat:"indian",kcal:190,protein:24,carbs:4,fat:8,emoji:"🐟"},
+  {name:"Egg White Omelette (3)",cat:"indian",kcal:105,protein:18,carbs:2,fat:2,emoji:"🥚"},
+  {name:"Methi Thepla (2)",cat:"indian",kcal:220,protein:7,carbs:32,fat:7,emoji:"🌿"},
+  {name:"Mango Lassi",cat:"indian",kcal:230,protein:7,carbs:38,fat:6,emoji:"🥭"},
+  {name:"Saag (1 cup)",cat:"indian",kcal:90,protein:5,carbs:10,fat:4,emoji:"🥬"},
+  {name:"Chicken Tikka (6 pcs)",cat:"indian",kcal:255,protein:36,carbs:3,fat:10,emoji:"🔥"},
+  {name:"Rava Idli (2)",cat:"indian",kcal:145,protein:5,carbs:27,fat:3,emoji:"⚪"},
+  {name:"Peanut Chutney (2tbsp)",cat:"indian",kcal:110,protein:4,carbs:4,fat:9,emoji:"🥜"},
+  {name:"Hummus (4 tbsp)",cat:"mediterranean",kcal:160,protein:6,carbs:14,fat:9,emoji:"🫘"},
+  {name:"Falafel (4 pcs)",cat:"mediterranean",kcal:330,protein:14,carbs:32,fat:18,emoji:"🟢"},
+  {name:"Grilled Salmon (120g)",cat:"mediterranean",kcal:280,protein:34,carbs:0,fat:15,emoji:"🐟"},
+  {name:"Greek Salad",cat:"mediterranean",kcal:180,protein:6,carbs:10,fat:14,emoji:"🥗"},
+  {name:"Tzatziki (½ cup)",cat:"mediterranean",kcal:90,protein:5,carbs:6,fat:5,emoji:"🥒"},
+  {name:"Pita Bread (1)",cat:"mediterranean",kcal:165,protein:6,carbs:33,fat:1,emoji:"🫓"},
+  {name:"Tabbouleh (1 cup)",cat:"mediterranean",kcal:140,protein:4,carbs:20,fat:6,emoji:"🌿"},
+  {name:"Baba Ganoush (3 tbsp)",cat:"mediterranean",kcal:90,protein:2,carbs:8,fat:6,emoji:"🍆"},
+  {name:"Grilled Chicken Shawarma",cat:"mediterranean",kcal:360,protein:32,carbs:28,fat:13,emoji:"🌯"},
+  {name:"Lentil Soup (1 bowl)",cat:"mediterranean",kcal:220,protein:14,carbs:36,fat:4,emoji:"🍲"},
+  {name:"Fattoush Salad",cat:"mediterranean",kcal:155,protein:4,carbs:22,fat:7,emoji:"🥗"},
+  {name:"Grilled Sea Bass (150g)",cat:"mediterranean",kcal:195,protein:30,carbs:0,fat:8,emoji:"🐟"},
+  {name:"Shakshuka (2 eggs)",cat:"mediterranean",kcal:280,protein:16,carbs:18,fat:16,emoji:"🍳"},
+  {name:"Quinoa Bowl (1 cup)",cat:"mediterranean",kcal:230,protein:9,carbs:40,fat:4,emoji:"🌾"},
+  {name:"Stuffed Grape Leaves (4)",cat:"mediterranean",kcal:180,protein:4,carbs:22,fat:8,emoji:"🍃"},
+  {name:"Grilled Halloumi (80g)",cat:"mediterranean",kcal:240,protein:16,carbs:1,fat:19,emoji:"🧀"},
+  {name:"Roasted Chickpeas (½ cup)",cat:"mediterranean",kcal:130,protein:7,carbs:20,fat:3,emoji:"🟡"},
+  {name:"Caprese Salad",cat:"mediterranean",kcal:230,protein:12,carbs:6,fat:18,emoji:"🍅"},
+  {name:"Avocado Toast (1 slice)",cat:"mediterranean",kcal:280,protein:8,carbs:28,fat:16,emoji:"🥑"},
+  {name:"Moussaka (serving)",cat:"mediterranean",kcal:370,protein:20,carbs:26,fat:22,emoji:"🍆"},
+  {name:"Grilled Prawns (8 pcs)",cat:"mediterranean",kcal:190,protein:28,carbs:2,fat:7,emoji:"🦐"},
+  {name:"Overnight Oats",cat:"healthy",kcal:310,protein:12,carbs:52,fat:7,emoji:"🥣"},
+  {name:"Banana (medium)",cat:"healthy",kcal:90,protein:1,carbs:22,fat:0,emoji:"🍌"},
+  {name:"Boiled Eggs (2)",cat:"healthy",kcal:140,protein:12,carbs:1,fat:10,emoji:"🥚"},
+  {name:"Greek Yogurt 150g",cat:"healthy",kcal:90,protein:15,carbs:6,fat:0,emoji:"🥛"},
+  {name:"Protein Smoothie",cat:"healthy",kcal:280,protein:25,carbs:30,fat:5,emoji:"🥤"},
+  {name:"Brown Rice (1 cup)",cat:"healthy",kcal:215,protein:5,carbs:44,fat:2,emoji:"🍚"},
+  {name:"Sweet Potato (medium)",cat:"healthy",kcal:115,protein:2,carbs:27,fat:0,emoji:"🍠"},
+  {name:"Almond Butter (2tbsp)",cat:"healthy",kcal:190,protein:7,carbs:6,fat:18,emoji:"🥜"},
+  {name:"Mixed Nuts (30g)",cat:"healthy",kcal:175,protein:5,carbs:6,fat:15,emoji:"🥜"},
+  {name:"Broccoli Stir Fry",cat:"healthy",kcal:130,protein:7,carbs:14,fat:5,emoji:"🥦"},
+  {name:"Edamame (½ cup)",cat:"healthy",kcal:110,protein:10,carbs:10,fat:4,emoji:"💚"},
+  {name:"Cottage Cheese (100g)",cat:"healthy",kcal:110,protein:12,carbs:3,fat:5,emoji:"🧀"},
+  {name:"Apple (medium)",cat:"healthy",kcal:80,protein:0,carbs:21,fat:0,emoji:"🍎"},
+  {name:"Tuna (1 can 120g)",cat:"healthy",kcal:130,protein:28,carbs:0,fat:1,emoji:"🐟"},
+  {name:"Egg White Scramble (4)",cat:"healthy",kcal:70,protein:14,carbs:1,fat:0,emoji:"🥚"},
+  {name:"Peanut Butter Toast",cat:"healthy",kcal:260,protein:10,carbs:28,fat:14,emoji:"🥜"},
+  {name:"Mixed Berry Bowl",cat:"healthy",kcal:90,protein:2,carbs:20,fat:1,emoji:"🫐"},
+  {name:"Steamed Broccoli (cup)",cat:"healthy",kcal:55,protein:4,carbs:11,fat:0,emoji:"🥦"},
+  {name:"Chicken Breast 150g",cat:"healthy",kcal:250,protein:47,carbs:0,fat:5,emoji:"🍗"},
+  {name:"Oatmeal with Milk",cat:"healthy",kcal:290,protein:12,carbs:48,fat:7,emoji:"🥣"},
+  {name:"Soya Chunks (50g dry)",cat:"healthy",kcal:170,protein:26,carbs:14,fat:1,emoji:"🌱"},
+  {name:"Whole Milk (1 glass)",cat:"healthy",kcal:148,protein:8,carbs:11,fat:8,emoji:"🥛"},
+  {name:"Dark Chocolate (30g)",cat:"healthy",kcal:165,protein:2,carbs:14,fat:12,emoji:"🍫"},
+  {name:"Black Coffee",cat:"healthy",kcal:5,protein:0,carbs:0,fat:0,emoji:"☕"},
+  {name:"Caesar Salad",cat:"salad",kcal:190,protein:10,carbs:6,fat:15,emoji:"🥗"},
+  {name:"Kale Quinoa Salad",cat:"salad",kcal:260,protein:10,carbs:34,fat:10,emoji:"🥗"},
+  {name:"Nicoise Salad",cat:"salad",kcal:320,protein:22,carbs:18,fat:18,emoji:"🥗"},
+  {name:"Asian Sesame Salad",cat:"salad",kcal:220,protein:8,carbs:26,fat:10,emoji:"🥗"},
+  {name:"Watermelon Feta Salad",cat:"salad",kcal:160,protein:5,carbs:22,fat:7,emoji:"🍉"},
+  {name:"Chickpea Avocado Salad",cat:"salad",kcal:300,protein:12,carbs:28,fat:16,emoji:"🥑"},
+  {name:"Egg Spinach Salad",cat:"salad",kcal:180,protein:14,carbs:6,fat:12,emoji:"🥚"},
+  {name:"Paneer Salad Bowl",cat:"salad",kcal:280,protein:18,carbs:10,fat:20,emoji:"🧀"},
+  {name:"Cucumber Mint Salad",cat:"salad",kcal:45,protein:1,carbs:8,fat:1,emoji:"🥒"},
+  {name:"Roasted Veggie Salad",cat:"salad",kcal:195,protein:5,carbs:28,fat:8,emoji:"🥕"},
+  {name:"Mango Chicken Salad",cat:"salad",kcal:280,protein:26,carbs:22,fat:9,emoji:"🥭"},
+  {name:"Beetroot Walnut Salad",cat:"salad",kcal:220,protein:5,carbs:24,fat:12,emoji:"🫐"},
+  {name:"Lentil Tomato Salad",cat:"salad",kcal:200,protein:12,carbs:30,fat:4,emoji:"🍅"},
+  {name:"Tuna Avocado Salad",cat:"salad",kcal:290,protein:28,carbs:6,fat:16,emoji:"🐟"},
+  {name:"Simple Garden Salad",cat:"salad",kcal:60,protein:2,carbs:10,fat:2,emoji:"🥗"},
+  {name:"Sprout Cucumber Salad",cat:"salad",kcal:80,protein:5,carbs:12,fat:1,emoji:"🌱"},
+];
+
+// =============================================
+// EXERCISE LIBRARY
+// =============================================
+const PHASES = [
+  {w:1,name:"Foundation",tag:"✨ FOUNDATION",col:"#7c2d5e",phase:"foundation"},
+  {w:2,name:"Foundation",tag:"✨ FOUNDATION",col:"#7c2d5e",phase:"foundation"},
+  {w:3,name:"Build",tag:"💪 BUILD",col:"#1a3a8c",phase:"build"},
+  {w:4,name:"Build",tag:"💪 BUILD",col:"#1a3a8c",phase:"build"},
+  {w:5,name:"Glow Up",tag:"🌸 GLOW UP",col:"#7a2400",phase:"glowup"},
+  {w:6,name:"Glow Up",tag:"🌸 GLOW UP",col:"#7a2400",phase:"glowup"},
+];
+
+const DAYS_DEF = [
+  {k:"upper",l:"Mon",s:"M",label:"Upper Body",sub:"Chest · Shoulders · Arms · Back"},
+  {k:"lower",l:"Tue",s:"T",label:"Lower Body",sub:"Glutes · Legs · Calves"},
+  {k:"cardio",l:"Wed",s:"W",label:"Cardio Day",sub:"Endurance · Fat Burn · Core"},
+  {k:"upper2",l:"Thu",s:"T",label:"Upper Pull",sub:"Back · Biceps · Rear Delts"},
+  {k:"lower2",l:"Fri",s:"F",label:"Glute Focus",sub:"Hip Thrusts · Kickbacks · Burn"},
+  {k:"full",l:"Sat",s:"S",label:"Full Body",sub:"Compound lifts · Total tone"},
+  {k:"rest",l:"Sun",s:"S",label:"Rest Day",sub:"Recovery · Mobility · Yoga"},
+];
+
+// Icon SVG generator by exercise type
+function getExIcon(type,col){
+  const c=col||"#ff5c9d";
+  const icons={
+    press:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-press"><rect x="6" y="14" width="20" height="4" rx="2" fill="${c}" opacity="0.9"/><rect x="2" y="11" width="6" height="10" rx="3" fill="${c}"/><rect x="24" y="11" width="6" height="10" rx="3" fill="${c}"/><circle cx="16" cy="8" r="4" fill="${c}" opacity="0.7"/><rect x="14" y="12" width="4" height="6" rx="1" fill="${c}" opacity="0.5"/></svg>`,
+    curl:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-curl" style="transform-origin:50% 70%"><circle cx="16" cy="7" r="4" fill="${c}" opacity="0.8"/><rect x="14" y="11" width="4" height="8" rx="2" fill="${c}"/><rect x="8" y="18" width="16" height="4" rx="2" fill="${c}" opacity="0.7"/><rect x="10" y="22" width="4" height="6" rx="2" fill="${c}" opacity="0.5"/><rect x="18" y="22" width="4" height="6" rx="2" fill="${c}" opacity="0.5"/></svg>`,
+    squat:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-squat" style="transform-origin:50% 60%"><circle cx="16" cy="6" r="4" fill="${c}" opacity="0.8"/><rect x="13" y="10" width="6" height="10" rx="2" fill="${c}"/><rect x="7" y="18" width="18" height="4" rx="2" fill="${c}" opacity="0.8"/><rect x="7" y="22" width="6" height="8" rx="3" fill="${c}" opacity="0.6"/><rect x="19" y="22" width="6" height="8" rx="3" fill="${c}" opacity="0.6"/></svg>`,
+    thrust:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-thrust"><rect x="2" y="20" width="28" height="5" rx="2.5" fill="${c}" opacity="0.3"/><circle cx="16" cy="14" r="5" fill="${c}" opacity="0.8"/><rect x="10" y="18" width="12" height="6" rx="3" fill="${c}"/><rect x="4" y="22" width="8" height="5" rx="2" fill="${c}" opacity="0.5"/><rect x="20" y="22" width="8" height="5" rx="2" fill="${c}" opacity="0.5"/></svg>`,
+    kick:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-kick" style="transform-origin:20% 60%"><circle cx="12" cy="6" r="4" fill="${c}" opacity="0.8"/><rect x="10" y="10" width="4" height="10" rx="2" fill="${c}"/><rect x="4" y="20" width="14" height="4" rx="2" fill="${c}" opacity="0.8"/><rect x="4" y="24" width="5" height="7" rx="2" fill="${c}" opacity="0.5"/><rect x="22" y="14" width="8" height="4" rx="2" fill="${c}" opacity="0.7"/></svg>`,
+    row:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-row"><circle cx="10" cy="7" r="4" fill="${c}" opacity="0.8"/><rect x="8" y="11" width="4" height="8" rx="2" fill="${c}"/><rect x="6" y="19" width="8" height="4" rx="2" fill="${c}" opacity="0.7"/><rect x="6" y="23" width="4" height="7" rx="2" fill="${c}" opacity="0.5"/><rect x="16" y="15" width="14" height="4" rx="2" fill="${c}" opacity="0.8"/><rect x="26" y="11" width="4" height="10" rx="2" fill="${c}" opacity="0.6"/></svg>`,
+    run:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-run"><circle cx="20" cy="5" r="4" fill="${c}" opacity="0.8"/><rect x="14" y="9" width="10" height="3" rx="1.5" fill="${c}" opacity="0.6"/><rect x="16" y="11" width="4" height="8" rx="2" fill="${c}"/><rect x="8" y="17" width="10" height="4" rx="2" fill="${c}" opacity="0.8"/><rect x="6" y="14" width="8" height="3" rx="1.5" fill="${c}" opacity="0.6"/><rect x="18" y="19" width="4" height="8" rx="2" fill="${c}" opacity="0.7"/><rect x="12" y="21" width="4" height="8" rx="2" fill="${c}" opacity="0.5"/></svg>`,
+    pull:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-lift"><rect x="2" y="5" width="28" height="4" rx="2" fill="${c}" opacity="0.4"/><rect x="5" y="9" width="4" height="8" rx="2" fill="${c}" opacity="0.6"/><rect x="23" y="9" width="4" height="8" rx="2" fill="${c}" opacity="0.6"/><circle cx="16" cy="18" r="4" fill="${c}" opacity="0.8"/><rect x="14" y="21" width="4" height="10" rx="2" fill="${c}" opacity="0.6"/></svg>`,
+    yoga:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-pulse"><circle cx="16" cy="6" r="4" fill="${c}" opacity="0.8"/><rect x="14" y="10" width="4" height="8" rx="2" fill="${c}"/><rect x="4" y="14" width="10" height="3" rx="1.5" fill="${c}" opacity="0.7"/><rect x="18" y="14" width="10" height="3" rx="1.5" fill="${c}" opacity="0.7"/><rect x="8" y="22" width="8" height="3" rx="1.5" fill="${c}" opacity="0.6"/><rect x="16" y="22" width="8" height="3" rx="1.5" fill="${c}" opacity="0.6"/></svg>`,
+    jump:`<svg width="32" height="32" viewBox="0 0 32 32" class="anim-jump"><circle cx="16" cy="5" r="4" fill="${c}" opacity="0.8"/><rect x="14" y="9" width="4" height="6" rx="2" fill="${c}"/><rect x="6" y="12" width="8" height="3" rx="1.5" fill="${c}" opacity="0.7"/><rect x="18" y="12" width="8" height="3" rx="1.5" fill="${c}" opacity="0.7"/><rect x="12" y="15" width="4" height="9" rx="2" fill="${c}" opacity="0.6"/><rect x="16" y="15" width="4" height="9" rx="2" fill="${c}" opacity="0.6"/></svg>`,
+  };
+  return icons[type]||icons.press;
+}
+
+const LIB = {
+  upper:[
+    {slot:"Chest Press",icon:"press",col:"#4d79ff",v:["DB Chest Press","Push-Ups","Incline DB Press","Smith Machine Press","Cable Fly"]},
+    {slot:"Shoulder Press",icon:"press",col:"#ff5c9d",v:["DB Shoulder Press","Arnold Press","Machine Shoulder Press","Lateral Raises","Upright Row"]},
+    {slot:"Bicep Curl",icon:"curl",col:"#00e5a0",v:["DB Bicep Curl","Hammer Curl","Cable Curl","Band Curl","Concentration Curl"]},
+    {slot:"Tricep Ext",icon:"press",col:"#ff6535",v:["Overhead Extension","Tricep Dips","Cable Pushdown","Skull Crushers","Kickbacks"]},
+    {slot:"Front Raise",icon:"pull",col:"#ffd700",v:["DB Front Raise","Plate Raise","Cable Front Raise","Band Front Raise","Alternating Raise"]},
+  ],
+  lower:[
+    {slot:"Squat",icon:"squat",col:"#ff5c9d",v:["Goblet Squat","Sumo Squat","Smith Machine Squat","Bodyweight Squat","Hack Squat"]},
+    {slot:"Hip Thrust",icon:"thrust",col:"#c8336e",v:["Glute Bridge","Hip Thrust","Single-Leg Bridge","Banded Hip Thrust","Cable Pull-Through"]},
+    {slot:"Lunge",icon:"squat",col:"#4d79ff",v:["Walking Lunge","Reverse Lunge","Side Lunge","Step Up","Bulgarian Split Squat"]},
+    {slot:"Leg Press",icon:"squat",col:"#00e5a0",v:["Leg Press","Wall Sit","Leg Extension","Hack Squat","Sissy Squat"]},
+    {slot:"Calf Raise",icon:"jump",col:"#ffd700",v:["Standing Calf Raise","Seated Calf Raise","Single Leg Calf","Donkey Calf","Tip Toe Walk"]},
+  ],
+  cardio:[
+    {slot:"Warm Up",icon:"run",col:"#00e5a0",v:["5 min Brisk Walk","5 min Jump Rope","5 min March on Spot","5 min Cycling","5 min Stair Climb"]},
+    {slot:"Main Cardio",icon:"run",col:"#ff5c9d",v:["20 min HIIT Run","20 min Cycling","20 min Treadmill","20 min Jump Rope","20 min Elliptical"]},
+    {slot:"Steady State",icon:"run",col:"#4d79ff",v:["10 min Jog","10 min Swim","10 min Row","10 min Dance","10 min Stairmaster"]},
+    {slot:"Core Blast",icon:"yoga",col:"#ff6535",v:["Plank 3×45s","Dead Bug 3×12","Leg Raises 3×15","Bicycle Crunch 3×20","Mountain Climber 3×30"]},
+    {slot:"Cool Down",icon:"yoga",col:"#a855f7",v:["5 min Walk + Stretch","5 min Yoga Flow","Full Body Cooldown","Cat-Cow + Child's Pose","Foam Roll 5 min"]},
+  ],
+  upper2:[
+    {slot:"Lat Pulldown",icon:"pull",col:"#00c4bf",v:["Lat Pulldown","Wide Pull Up","Band Pulldown","Cable Straight Arm","Seated Row"]},
+    {slot:"DB Row",icon:"row",col:"#4d79ff",v:["Single Arm DB Row","Seated Cable Row","Machine Row","Band Row","Pendlay Row"]},
+    {slot:"Face Pull",icon:"row",col:"#ff5c9d",v:["Face Pull","Reverse Fly","Band Pull-Apart","Cable Rear Delt Fly","Bent Over Fly"]},
+    {slot:"Hammer Curl",icon:"curl",col:"#00e5a0",v:["Hammer Curl","Cross-Body Curl","Incline Curl","Rope Curl","Zottman Curl"]},
+    {slot:"Rear Delt",icon:"row",col:"#ffd700",v:["Rear Delt Fly DB","Band Reverse Fly","Cable Rear Delt","Prone Y-Raise","Prone T-Raise"]},
+  ],
+  lower2:[
+    {slot:"Hip Thrust",icon:"thrust",col:"#c8336e",v:["Weighted Hip Thrust","Single-Leg Hip Thrust","Banded Hip Thrust","Smith Machine Thrust","Frog Pump"]},
+    {slot:"Romanian DL",icon:"squat",col:"#ff5c9d",v:["Romanian Deadlift","Single-Leg RDL","Good Morning","Stiff-Leg DL","Cable RDL"]},
+    {slot:"Cable Kickback",icon:"kick",col:"#ff6535",v:["Cable Kickback","Donkey Kick","Banded Kickback","Machine Kickback","Glute Drive"]},
+    {slot:"Adductor",icon:"squat",col:"#00e5a0",v:["Inner Thigh Machine","Cable Adduction","Sumo Squat","Plie Squat","Side-Lying Leg Raise"]},
+    {slot:"Donkey Kick",icon:"kick",col:"#4d79ff",v:["Donkey Kick","Fire Hydrant","Clam Shell","Glute Kickback","Hip Abduction"]},
+  ],
+  full:[
+    {slot:"Compound Squat",icon:"squat",col:"#ff5c9d",v:["Barbell Squat","Goblet Squat","Hack Squat","Front Squat","Zercher Squat"]},
+    {slot:"Push Press",icon:"press",col:"#4d79ff",v:["DB Push Press","Thruster","Landmine Press","Z Press","Seated DB Press"]},
+    {slot:"Deadlift",icon:"squat",col:"#c8336e",v:["Conventional DL","Trap Bar DL","Romanian DL","Single-Leg DL","Sumo DL"]},
+    {slot:"Pull Up",icon:"pull",col:"#00e5a0",v:["Assisted Pull Up","Lat Pulldown","Band Pull Up","Negative Pull Up","Cable Pullover"]},
+    {slot:"Burpee/Finisher",icon:"jump",col:"#ff6535",v:["Burpees 3×8","No-Jump Burpee","Squat Thrust","Mountain Climber","Jump Squat"]},
+  ],
+  rest:[
+    {slot:"Yoga Flow",icon:"yoga",col:"#a855f7",v:["Sun Salutation 5 rounds","Yin Yoga 30min","Restorative Flow","Power Yoga 20min","Yoga Nidra 20min"]},
+    {slot:"Mobility",icon:"yoga",col:"#00e5a0",v:["Hip Flexor + Pigeon Pose","Thoracic Rotation","Foam Roll Full Body","Cat-Cow + Thread Needle","Figure 4 + Butterfly"]},
+  ]
+};
+
+// =============================================
+// STATE
+// =============================================
+const SK = {
+  food:"tgt_food", weight:"tgt_weight", photos:"tgt_photos",
+  week:"tgt_week", day:"tgt_day", vars:"tgt_vars",
+  calTarget:"tgt_caltarget", proteinTarget:"tgt_proteintarget",
+  programStart:"tgt_pstart", burnLog:"tgt_burnlog",
+  cardioDone:"tgt_cardio",
+  workout:(d,w)=>`tgt_w${w}d${d}`
+};
+function lsGet(k,def){try{const v=localStorage.getItem(k);return v===null?def:JSON.parse(v);}catch{return def;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+
+let CUR_WEEK = lsGet(SK.week,1);
+let CUR_DAY = lsGet(SK.day,0);
+let VARS = lsGet(SK.vars,{});
+let WLOG = lsGet(SK.weight,[{d:"Start",w:47}]);
+let FOOD_LOG = lsGet(SK.food,[]);
+let PROGRESS_PHOTOS = lsGet(SK.photos,{});
+let CAL_TARGET = lsGet(SK.calTarget,1800);
+let PROTEIN_TARGET = lsGet(SK.proteinTarget,90);
+let PHOTO_WEEK = 1;
+let BURN_LOG = lsGet(SK.burnLog,[]);
+let timerInterval = null;
+let currentDishCat = "all";
+let curMealDay = 0;
+
+// =============================================
+// DAY COUNTER (auto-advances)
+// =============================================
+function getProgramDay(){
+  let start = lsGet(SK.programStart, null);
+  if(!start){
+    start = new Date().toISOString().split("T")[0];
+    lsSet(SK.programStart, start);
+  }
+  const days = Math.floor((Date.now() - new Date(start).getTime()) / 86400000) + 1;
+  return Math.max(1, days);
+}
+
+function updateDayBadge(){
+  const day = getProgramDay();
+  const week = Math.min(Math.ceil(day/7), 6);
+  const dayOfWeek = (day - 1) % 7; // 0 = Mon
+  document.getElementById("header-day-badge").textContent = `🔥 Day ${day}`;
+  // Auto-set week and day to match program day
+  if(CUR_WEEK !== week || CUR_DAY !== dayOfWeek){
+    CUR_WEEK = week;
+    CUR_DAY = dayOfWeek;
+    lsSet(SK.week, CUR_WEEK);
+    lsSet(SK.day, CUR_DAY);
+  }
+  document.getElementById("header-sub").textContent = `Week ${week} · ${WLOG[WLOG.length-1]?.w||47}kg → 52kg`;
+}
+
+// =============================================
+// TAB SWITCHING
+// =============================================
+const TABS = ["workout","food","progress","burn","learn"];
+function switchTab(id){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("tab-"+id).classList.add("active");
+  TABS.forEach(t=>{
+    const ni=document.getElementById("ni-"+t);
+    const nl=document.getElementById("nl-"+t);
+    if(t===id){ni.style.color="var(--pink)";ni.classList.add("ms-fill");nl.style.color="var(--pink)";}
+    else{ni.style.color="var(--dim)";ni.classList.remove("ms-fill");nl.style.color="var(--dim)";}
+  });
+}
+
+// =============================================
+// WORKOUT
+// =============================================
+function initWorkout(){
+  // Week pills
+  let html="";
+  for(let w=1;w<=6;w++){
+    const active=w===CUR_WEEK;
+    html+=`<button onclick="setWeek(${w})" style="padding:6px 16px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:800;font-family:'Space Grotesk',sans-serif;background:${active?"var(--pink)":"var(--card2)"};color:${active?"#0a0c12":"var(--sub)"};white-space:nowrap;transition:all 0.2s;">W${w}</button>`;
+  }
+  document.getElementById("week-pills").innerHTML=html;
+  renderDayPills();
+  renderHero();
+  renderExercises();
+  updateCardioBadge();
+}
+
+function setWeek(w){CUR_WEEK=w;lsSet(SK.week,w);initWorkout();}
+function setDay(d){CUR_DAY=d;lsSet(SK.day,d);renderDayPills();renderHero();renderExercises();}
+
+function renderDayPills(){
+  let html="";
+  DAYS_DEF.forEach((d,i)=>{
+    const active=i===CUR_DAY;
+    html+=`<button onclick="setDay(${i})" style="flex:1;padding:7px 2px;border-radius:10px;border:none;cursor:pointer;font-size:10px;font-weight:800;font-family:'Space Grotesk',sans-serif;background:${active?"var(--pink)":"var(--card2)"};color:${active?"#0a0c12":"var(--sub)"};transition:all 0.2s;line-height:1.4;">${d.s}<br/><span style="font-size:8px;opacity:0.8;">${d.l}</span></button>`;
+  });
+  document.getElementById("day-pills").innerHTML=html;
+}
+
+function renderHero(){
+  const phase=PHASES[Math.min(CUR_WEEK-1,5)];
+  const day=DAYS_DEF[CUR_DAY];
+  document.getElementById("hero-week-badge").textContent=`WEEK ${CUR_WEEK} / 6`;
+  document.getElementById("hero-phase").textContent=phase.tag;
+  document.getElementById("hero-day-name").textContent=day.label.toUpperCase();
+  document.getElementById("hero-day-detail").textContent=day.sub;
+  document.getElementById("hero-gradient").style.background=`linear-gradient(135deg,${phase.col},var(--pink-dark))`;
+  // Unsplash image
+  const imgs = HERO_IMGS[phase.phase];
+  const img = imgs[CUR_DAY % imgs.length];
+  document.getElementById("hero-img").src = img;
+  document.getElementById("hero-img").style.opacity = "0";
+}
+
+function renderExercises(){
+  const day=DAYS_DEF[CUR_DAY];
+  const exercises=LIB[day.k]||[];
+  const savedData=lsGet(SK.workout(CUR_DAY,CUR_WEEK),{});
+  const sets=CUR_WEEK<=2?3:CUR_WEEK<=4?3:4;
+  const reps=(day.k==="cardio"||day.k==="rest")?"—":"12–15";
+  const rest=CUR_WEEK<=2?45:CUR_WEEK<=4?40:35;
+  const isCardio=(day.k==="cardio"||day.k==="rest");
+
+  // Daily 20min cardio reminder
+  let html=`<div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+    <span style="font-size:20px;">⚡</span>
+    <div style="flex:1;"><div style="font-size:11px;font-weight:800;color:var(--green);">DAILY CARDIO · 20 MIN</div><div style="font-size:11px;color:var(--sub);">Run · Walk · Dance · Cycle · Swim</div></div>
+    <button id="daily-cardio-btn" onclick="toggleDailyCardio()" style="background:${lsGet(SK.cardioDone+new Date().toDateString(),'false')==='true'?'var(--green)':'var(--card2)'};border:1px solid var(--border);color:${lsGet(SK.cardioDone+new Date().toDateString(),'false')==='true'?'#0a0c12':'var(--sub)'};padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">${lsGet(SK.cardioDone+new Date().toDateString(),'false')==='true'?'✓ Done':'○ Log'}</button>
+  </div>`;
+
+  if(!exercises.length){html+="<div style='text-align:center;padding:40px;color:var(--sub);'>Rest up, queen 🌸</div>";}
+  else{
+    exercises.forEach((ex,i)=>{
+      const varIdx=VARS[`${CUR_WEEK}_${CUR_DAY}_${i}`]||0;
+      const name=ex.v[varIdx]||ex.v[0];
+      const done=savedData[`done_${i}`]||false;
+      const wt=savedData[`wt_${i}`]||"";
+      html+=`
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;border-left:3px solid ${ex.col};${done?"opacity:0.55;":""}transition:opacity 0.3s;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <div class="ex-icon-wrap" style="background:${ex.col}18;">${getExIcon(ex.icon,ex.col)}</div>
+          <div style="flex:1;">
+            <div style="font-size:10px;color:var(--sub);font-weight:600;margin-bottom:2px;letter-spacing:0.5px;">${ex.slot}</div>
+            <div style="font-size:15px;font-weight:800;">${name}</div>
+          </div>
+          <button onclick="markDone(${i})" style="width:38px;height:38px;border-radius:50%;border:2px solid ${done?"var(--pink)":"var(--border)"};background:${done?"var(--pink)":"transparent"};color:${done?"#0a0c12":"var(--sub)"};cursor:pointer;font-size:16px;font-weight:900;transition:all 0.2s;flex-shrink:0;">${done?"✓":"○"}</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;${isCardio?"margin-bottom:0;":"margin-bottom:10px;"}">
+          ${!isCardio?`<span style="background:var(--card2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;">${sets} × ${reps}</span><span style="background:var(--card2);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--sub);">${rest}s rest</span>`:"<span style='background:var(--card2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;color:var(--sub);'>Complete as instructed</span>"}
+          <div style="margin-left:auto;display:flex;gap:4px;">
+            <button onclick="swapEx(${i},-1)" style="background:var(--card2);border:1px solid var(--border);color:var(--sub);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;">‹</button>
+            <button onclick="swapEx(${i},1)" style="background:var(--card2);border:1px solid var(--border);color:var(--sub);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;">›</button>
+          </div>
+        </div>
+        ${!isCardio?`<div style="display:flex;align-items:center;gap:8px;">
+          <input type="number" step="0.5" placeholder="Weight (kg)" value="${wt}" onchange="saveWt(${i},this.value)" style="flex:1;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+          <span style="font-size:12px;color:var(--sub);">kg</span>
+        </div>`:""}
+      </div>`;
+    });
+  }
+  document.getElementById("exercise-list").innerHTML=html;
+}
+
+function toggleDailyCardio(){
+  const key=SK.cardioDone+new Date().toDateString();
+  const cur=lsGet(key,'false')==='true';
+  lsSet(key, (!cur).toString());
+  renderExercises();
+  toast((!cur)?"Cardio done! 🔥":"Cardio unmarked");
+}
+function updateCardioBadge(){}
+
+function markDone(i){
+  const data=lsGet(SK.workout(CUR_DAY,CUR_WEEK),{});
+  data[`done_${i}`]=!data[`done_${i}`];
+  lsSet(SK.workout(CUR_DAY,CUR_WEEK),data);
+  saveWorkoutToCloud(CUR_WEEK,CUR_DAY,data);
+  if(data[`done_${i}`]){
+    const rest=CUR_WEEK<=2?45:CUR_WEEK<=4?40:35;
+    startTimer(rest);
+  }
+  renderExercises();
+  beep(440,0.1,0.3);
+}
+function saveWt(i,val){const data=lsGet(SK.workout(CUR_DAY,CUR_WEEK),{});data[`wt_${i}`]=val;lsSet(SK.workout(CUR_DAY,CUR_WEEK),data);}
+function swapEx(i,dir){
+  const ex=LIB[DAYS_DEF[CUR_DAY].k]?.[i];if(!ex)return;
+  const key=`${CUR_WEEK}_${CUR_DAY}_${i}`;
+  VARS[key]=((VARS[key]||0)+dir+ex.v.length)%ex.v.length;
+  lsSet(SK.vars,VARS);renderExercises();
+}
+
+function startTimer(secs){
+  stopTimer();let remaining=secs;
+  document.getElementById("rest-timer").style.display="block";
+  document.getElementById("timer-count").textContent=remaining;
+  document.getElementById("timer-ring").style.strokeDashoffset="0";
+  timerInterval=setInterval(()=>{
+    remaining--;
+    document.getElementById("timer-count").textContent=remaining;
+    document.getElementById("timer-ring").style.strokeDashoffset=214*(1-remaining/secs);
+    if(remaining<=3)beep(880,0.08,0.2);
+    if(remaining<=0){stopTimer();beep(660,0.3,0.5);document.getElementById("timer-count").textContent="GO!";}
+  },1000);
+}
+function stopTimer(){clearInterval(timerInterval);timerInterval=null;document.getElementById("rest-timer").style.display="none";}
+function toggleCardioDone(){
+  const btn=document.getElementById("cardio-done-btn");
+  const done=btn.textContent.includes("Done");
+  btn.textContent=done?"○ Log Cardio":"✓ Done!";
+  btn.style.background=done?"var(--card2)":"var(--pink)";
+  btn.style.color=done?"var(--sub)":"#0a0c12";
+  if(!done) toast("Cardio logged! 🔥");
+}
+
+// =============================================
+// FOOD — MEAL PLAN
+// =============================================
+function setFoodTab(t){
+  ["plan","search","log"].forEach(s=>{
+    document.getElementById("food-"+s+"-section").style.display=s===t?"block":"none";
+    const btn=document.getElementById("ftab-"+s);
+    btn.style.background=s===t?"var(--pink)":"transparent";
+    btn.style.color=s===t?"#0a0c12":"var(--sub)";
+  });
+  if(t==="log") renderFoodLogList();
+}
+
+function initMealPlan(){
+  // Day pills
+  const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  let html="";
+  days.forEach((d,i)=>{
+    const active=i===curMealDay;
+    html+=`<button onclick="setMealDay(${i})" style="padding:7px 14px;border-radius:20px;border:none;cursor:pointer;font-size:12px;font-weight:800;font-family:'Space Grotesk',sans-serif;background:${active?"var(--pink)":"var(--card2)"};color:${active?"#0a0c12":"var(--sub)"};white-space:nowrap;flex-shrink:0;transition:all 0.2s;">${d}</button>`;
+  });
+  document.getElementById("meal-day-pills").innerHTML=html;
+  renderMealPlan();
+}
+
+function setMealDay(i){
+  curMealDay=i;
+  initMealPlan();
+}
+
+function renderMealPlan(){
+  const plan=MEAL_PLAN[curMealDay];
+  if(!plan){return;}
+  const totalKcal=plan.meals.reduce((a,m)=>a+m.kcal,0);
+  const totalPro=plan.meals.reduce((a,m)=>a+m.protein,0);
+  let html=`<div style="background:linear-gradient(135deg,rgba(255,92,157,0.15),rgba(200,51,110,0.08));border:1px solid rgba(255,92,157,0.2);border-radius:14px;padding:14px;margin-bottom:14px;">
+    <div style="font-size:14px;font-weight:800;color:var(--pink);">${plan.day} — ${plan.theme}</div>
+    <div style="display:flex;gap:16px;margin-top:8px;">
+      <div><span style="font-size:18px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);">${totalKcal}</span><span style="font-size:11px;color:var(--sub);margin-left:4px;">kcal</span></div>
+      <div><span style="font-size:18px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--green);">${totalPro}g</span><span style="font-size:11px;color:var(--sub);margin-left:4px;">protein</span></div>
+    </div>
+  </div>`;
+
+  plan.meals.forEach((m,mi)=>{
+    html+=`<div class="meal-card">
+      <div style="padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:24px;">${m.emoji}</span>
+          <div>
+            <div style="font-size:10px;color:var(--pink);font-weight:700;">${m.time} · ${m.label}</div>
+            <div style="font-size:13px;font-weight:700;">${m.name}</div>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:16px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);">${m.kcal}</div>
+          <div style="font-size:11px;color:var(--green);">${m.protein}g pro</div>
+        </div>
+      </div>
+      <div style="padding:10px 14px;background:rgba(255,92,157,0.04);">
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <span style="background:rgba(0,229,160,0.1);color:var(--green);padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">${m.protein}g protein</span>
+          <span style="background:rgba(77,121,255,0.1);color:var(--blue);padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">${m.carbs}g carbs</span>
+          <span style="background:rgba(255,101,53,0.1);color:var(--orange);padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;">${m.fat}g fat</span>
+        </div>
+        <div style="font-size:12px;color:var(--sub);line-height:1.6;">${m.why}</div>
+        <button onclick="logMealPlanEntry(${curMealDay},${mi})" style="margin-top:10px;background:var(--card);border:1px solid var(--border);color:var(--pink);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;width:100%;">+ Log This Meal</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById("meal-plan-content").innerHTML=html;
+}
+
+function logMealPlanEntry(dayIdx,mealIdx){
+  const m=MEAL_PLAN[dayIdx].meals[mealIdx];
+  const now=new Date();
+  const time=now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
+  const entry={name:m.name,kcal:m.kcal,protein:m.protein,carbs:m.carbs,fat:m.fat,time};
+  FOOD_LOG.push(entry);
+  lsSet(SK.food,FOOD_LOG);
+  saveFoodToCloud(entry);
+  renderFoodRing();
+  toast(`${m.emoji} ${m.label} logged!`);
+}
+
+// =============================================
+// FOOD — SEARCH
+// =============================================
+function setDishCat(cat){
+  currentDishCat=cat;
+  ["all","indian","mediterranean","healthy","salad"].forEach(c=>{
+    const b=document.getElementById("cat-"+c);
+    if(b){if(c===cat){b.style.background="var(--pink)";b.style.color="#0a0c12";b.style.border="none";}
+    else{b.style.background="var(--card2)";b.style.color="var(--sub)";b.style.border="1px solid var(--border)";}}
+  });
+  filterDishes();
+}
+
+function filterDishes(){
+  const el=document.getElementById("dish-search");
+  const q=el?el.value.toLowerCase():"";
+  const filtered=DISHES.filter(d=>{
+    const catMatch=currentDishCat==="all"||d.cat===currentDishCat;
+    const nameMatch=!q||d.name.toLowerCase().includes(q);
+    return catMatch&&nameMatch;
+  });
+  const grid=document.getElementById("dish-grid");
+  if(!grid)return;
+  if(!filtered.length){grid.innerHTML="<div style='text-align:center;padding:20px;color:var(--sub);font-size:13px;'>No dishes found</div>";return;}
+  grid.innerHTML=filtered.map(d=>`
+    <div class="dish-card" onclick="logDish(${DISHES.indexOf(d)})">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:22px;">${d.emoji}</span>
+          <div><div style="font-size:13px;font-weight:700;">${d.name}</div><div style="font-size:11px;color:var(--sub);">${d.carbs}g carbs · ${d.fat}g fat</div></div>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:14px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);">${d.kcal}</div>
+          <div style="font-size:11px;color:var(--green);">${d.protein}g pro</div>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function logDish(idx){
+  const d=DISHES[idx];
+  const now=new Date();
+  const time=now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
+  const entry={name:d.name,kcal:d.kcal,protein:d.protein,carbs:d.carbs||0,fat:d.fat||0,time};
+  FOOD_LOG.push(entry);
+  lsSet(SK.food,FOOD_LOG);
+  saveFoodToCloud(entry);
+  renderFoodRing();
+  toast(`${d.emoji} ${d.name} logged!`);
+}
+
+function logManual(){
+  const name=document.getElementById("manual-name").value.trim();
+  const kcal=parseInt(document.getElementById("manual-kcal").value)||0;
+  const protein=parseInt(document.getElementById("manual-protein").value)||0;
+  if(!name||!kcal){toast("Enter name and calories");return;}
+  const now=new Date();
+  const time=now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
+  const entry={name,kcal,protein,carbs:0,fat:0,time};
+  FOOD_LOG.push(entry);
+  lsSet(SK.food,FOOD_LOG);
+  saveFoodToCloud(entry);
+  document.getElementById("manual-name").value="";
+  document.getElementById("manual-kcal").value="";
+  document.getElementById("manual-protein").value="";
+  renderFoodRing();toast("Logged! 🍽️");
+}
+
+function clearFoodLog(){FOOD_LOG=[];lsSet(SK.food,[]);renderFoodRing();renderFoodLogList();toast("Cleared 🗑️");}
+
+function renderFoodRing(){
+  const total=FOOD_LOG.reduce((a,e)=>a+e.kcal,0);
+  const protein=FOOD_LOG.reduce((a,e)=>a+e.protein,0);
+  const carbs=FOOD_LOG.reduce((a,e)=>a+(e.carbs||0),0);
+  const pct=Math.min(total/CAL_TARGET,1);
+  document.getElementById("cal-ring").style.strokeDashoffset=289*(1-pct);
+  document.getElementById("cal-ring-num").textContent=total;
+  document.getElementById("food-protein-total").textContent=Math.round(protein)+"g / "+PROTEIN_TARGET+"g";
+  document.getElementById("food-carbs-total").textContent=Math.round(carbs)+"g";
+  const rem=CAL_TARGET-total;
+  const remEl=document.getElementById("food-remaining-display");
+  remEl.textContent=(rem>=0?rem:0)+" kcal";
+  remEl.style.color=total>CAL_TARGET?"var(--red)":"var(--green)";
+  document.getElementById("food-target-display").textContent=CAL_TARGET+" kcal";
+}
+
+function renderFoodLogList(){
+  const list=document.getElementById("food-log-list");
+  if(!FOOD_LOG.length){list.innerHTML="<div style='text-align:center;padding:20px;color:var(--sub);font-size:13px;'>Nothing logged yet 🍽️</div>";return;}
+  list.innerHTML=FOOD_LOG.slice().reverse().map((e,ri)=>{
+    const i=FOOD_LOG.length-1-ri;
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="flex:1;"><div style="font-size:13px;font-weight:600;">${e.name}</div><div style="font-size:11px;color:var(--sub);">${e.time}${e.protein?" · "+e.protein+"g pro":""}${e.carbs?" · "+e.carbs+"g carbs":""}</div></div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:15px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);">${e.kcal}</div>
+        <button onclick="removeFoodEntry(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:18px;padding:2px 4px;">×</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function removeFoodEntry(i){FOOD_LOG.splice(i,1);lsSet(SK.food,FOOD_LOG);renderFoodRing();renderFoodLogList();}
+
+// =============================================
+// PROGRESS
+// =============================================
+function logWeight(){
+  const val=parseFloat(document.getElementById("wt-input").value);
+  if(!val||val<30||val>150){toast("Enter a valid weight");return;}
+  const today=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+  WLOG.push({d:today,w:val});lsSet(SK.weight,WLOG);
+  saveWeightToCloud({w:val});
+  document.getElementById("wt-input").value="";
+  renderProgressTab();toast("Weight logged ✨");
+}
+
+function renderProgressTab(){
+  const latest=WLOG[WLOG.length-1]?.w||47;
+  const gained=Math.max(0,latest-47);
+  const pct=Math.min((latest-47)/5,1);
+  document.getElementById("wt-ring").style.strokeDashoffset=264*(1-pct);
+  document.getElementById("wt-current-display").textContent=latest;
+  document.getElementById("wt-gained").textContent=gained.toFixed(1)+" kg";
+  document.getElementById("header-sub").textContent=`Week ${CUR_WEEK} · ${latest}kg → 52kg`;
+  renderWeightChart();
+  renderPhotoWeekStrip();
+  renderPhotoGrid();
+}
+
+function renderWeightChart(){
+  const recent=WLOG.slice(-8);
+  const chart=document.getElementById("wt-chart");
+  if(recent.length<2){chart.innerHTML="<div style='color:var(--sub);font-size:12px;line-height:80px;text-align:center;width:100%;'>Log more weights to see trend 📈</div>";return;}
+  const vals=recent.map(e=>e.w);
+  const min=Math.min(...vals)-0.5,max=Math.max(...vals)+0.5,range=max-min||1;
+  chart.innerHTML=recent.map((e,i)=>{
+    const h=Math.round(((e.w-min)/range)*60)+10;
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+      <div style="font-size:9px;color:var(--pink);font-weight:700;">${e.w}</div>
+      <div style="width:100%;border-radius:4px 4px 0 0;background:${i===recent.length-1?"var(--pink)":"var(--card2)"};height:${h}px;min-width:16px;transition:height 0.5s;"></div>
+      <div style="font-size:9px;color:var(--sub);overflow:hidden;width:100%;text-align:center;">${e.d}</div>
+    </div>`;
+  }).join("");
+}
+
+const ANGLES=["Front","Back","Arms","Side"];
+function renderPhotoWeekStrip(){
+  let html="";
+  for(let w=1;w<=6;w++){
+    const photos=PROGRESS_PHOTOS[w]||{};
+    const count=ANGLES.filter(a=>photos[a]).length;
+    const active=w===PHOTO_WEEK;
+    html+=`<button onclick="setPhotoWeek(${w})" style="display:flex;flex-direction:column;align-items:center;padding:7px 12px;border-radius:10px;border:none;cursor:pointer;background:${active?"var(--pink)":"var(--card2)"};color:${active?"#0a0c12":"var(--sub)"};font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;white-space:nowrap;gap:2px;flex-shrink:0;">W${w}<span style="font-size:10px;opacity:0.7;">${count}/4</span></button>`;
+  }
+  document.getElementById("photo-week-strip").innerHTML=html;
+}
+function setPhotoWeek(w){PHOTO_WEEK=w;renderPhotoWeekStrip();renderPhotoGrid();}
+function renderPhotoGrid(){
+  const photos=PROGRESS_PHOTOS[PHOTO_WEEK]||{};
+  document.getElementById("photo-grid").innerHTML=ANGLES.map(a=>{
+    const url=photos[a];
+    return`<div onclick="${url?`openLightbox('${url}','Week ${PHOTO_WEEK} · ${a}')`:`uploadPhoto(${PHOTO_WEEK},'${a}')`}" style="position:relative;aspect-ratio:3/4;background:var(--card2);border-radius:12px;overflow:hidden;cursor:pointer;border:1px solid var(--border);">
+      ${url?`<img src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/>`:``}
+      ${url?`<div style="position:absolute;bottom:8px;left:8px;background:rgba(0,0,0,0.6);padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;color:white;">${a}</div>`
+           :`<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;"><div style="font-size:24px;">📸</div><div style="font-size:11px;color:var(--sub);">${a}</div></div>`}
+    </div>`;
+  }).join("");
+}
+function uploadPhoto(week,angle){
+  const inp=document.createElement("input");inp.type="file";inp.accept="image/*";
+  inp.onchange=async(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    toast("Uploading… 📤");
+    try{
+      const fd=new FormData();fd.append("file",file);fd.append("upload_preset",CLD_PRESET);fd.append("folder","tani-fitness/progress");
+      const r=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/image/upload`,{method:"POST",body:fd});
+      const d=await r.json();
+      const url=d.secure_url||null;
+      if(url){
+        if(!PROGRESS_PHOTOS[week])PROGRESS_PHOTOS[week]={};
+        PROGRESS_PHOTOS[week][angle]=url;lsSet(SK.photos,PROGRESS_PHOTOS);
+        // Save to Supabase
+        savePhotoToCloud(week);
+        renderPhotoGrid();renderPhotoWeekStrip();toast("Photo saved ✨");
+      }else{toast("Upload failed — check Cloudinary");}
+    }catch{toast("Upload error");}
+  };inp.click();
+}
+function openLightbox(url,label){
+  document.getElementById("lightbox-img").src=url;
+  document.getElementById("lightbox-label").textContent=label;
+  document.getElementById("lightbox").style.display="flex";
+}
+function closeLightbox(){document.getElementById("lightbox").style.display="none";}
+
+// =============================================
+// BURN LOG
+// =============================================
+const BURN_RATES = {walk:4,run:8,cycle:6,hiit:10,strength:5,yoga:3,swim:7,dance:5,other:5};
+
+function estimateBurn(){
+  const act=document.getElementById("burn-activity")?.value||"walk";
+  const mins=parseInt(document.getElementById("burn-mins")?.value)||30;
+  const est=Math.round(BURN_RATES[act]*mins*0.9); // approx for 47kg
+  const el=document.getElementById("burn-estimate");
+  if(el) el.textContent=est;
+}
+
+function logBurn(){
+  const act=document.getElementById("burn-activity").value;
+  const mins=parseInt(document.getElementById("burn-mins").value)||0;
+  const note=document.getElementById("burn-note").value.trim();
+  const manual=parseInt(document.getElementById("burn-manual-kcal").value)||0;
+  const kcal=manual||parseInt(document.getElementById("burn-estimate").textContent)||0;
+  if(!kcal){toast("Enter duration or override calories");return;}
+  const now=new Date();
+  const dateStr=now.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+  const timeStr=now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
+  BURN_LOG.push({act,mins,kcal,note,date:dateStr,time:timeStr,ts:Date.now()});
+  lsSet(SK.burnLog,BURN_LOG);
+  document.getElementById("burn-note").value="";
+  document.getElementById("burn-manual-kcal").value="";
+  renderBurnTab();
+  toast(`🔥 ${kcal} kcal burned logged!`);
+}
+
+function renderBurnTab(){
+  const today=new Date().toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+  const todayEntries=BURN_LOG.filter(e=>e.date===today);
+  const todayTotal=todayEntries.reduce((a,e)=>a+e.kcal,0);
+  const allTotal=BURN_LOG.reduce((a,e)=>a+e.kcal,0);
+  document.getElementById("burn-today-total").textContent=todayTotal;
+  document.getElementById("burn-all-total").textContent=allTotal;
+  renderBurnWeeklyChart();
+  renderBurnLogList();
+}
+
+function renderBurnWeeklyChart(){
+  const chart=document.getElementById("burn-weekly-chart");
+  const days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  const now=new Date();
+  const weekData=days.map((d,i)=>{
+    const target=new Date(now);
+    const diff=(now.getDay()||7)-1-i; // Mon=0
+    target.setDate(now.getDate()-diff);
+    const dateStr=target.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+    const total=BURN_LOG.filter(e=>e.date===dateStr).reduce((a,e)=>a+e.kcal,0);
+    return{d,total};
+  });
+  const max=Math.max(...weekData.map(e=>e.total),1);
+  chart.innerHTML=weekData.map((e,i)=>{
+    const h=Math.round((e.total/max)*60)+4;
+    const isToday=(new Date().getDay()||7)-1===i;
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+      ${e.total>0?`<div style="font-size:9px;color:var(--orange);font-weight:700;">${e.total}</div>`:'<div style="font-size:9px;"> </div>'}
+      <div style="width:100%;border-radius:4px 4px 0 0;background:${isToday?"var(--orange)":"var(--card2)"};height:${e.total>0?h:4}px;min-width:16px;transition:height 0.5s;"></div>
+      <div style="font-size:9px;color:var(--sub);">${e.d}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderBurnLogList(){
+  const list=document.getElementById("burn-log-list");
+  if(!BURN_LOG.length){list.innerHTML="<div style='text-align:center;padding:20px;color:var(--sub);font-size:13px;'>No burns logged yet 🔥</div>";return;}
+  const actEmojis={walk:"🚶",run:"🏃",cycle:"🚴",hiit:"⚡",strength:"🏋️",yoga:"🧘",swim:"🏊",dance:"💃",other:"💪"};
+  list.innerHTML=BURN_LOG.slice().reverse().map((e,ri)=>{
+    const i=BURN_LOG.length-1-ri;
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:20px;">${actEmojis[e.act]||"💪"}</span>
+        <div>
+          <div style="font-size:13px;font-weight:600;">${e.act.charAt(0).toUpperCase()+e.act.slice(1)}${e.mins?" · "+e.mins+" min":""}</div>
+          <div style="font-size:11px;color:var(--sub);">${e.date} ${e.time}${e.note?" · "+e.note:""}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-size:15px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--orange);">${e.kcal}</div>
+        <button onclick="removeBurnEntry(${i})" style="background:none;border:none;color:var(--sub);cursor:pointer;font-size:18px;">×</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function removeBurnEntry(i){BURN_LOG.splice(i,1);lsSet(SK.burnLog,BURN_LOG);renderBurnTab();}
+
+function calcTDEE(){
+  const age=parseFloat(document.getElementById("tdee-age").value)||22;
+  const h=parseFloat(document.getElementById("tdee-height").value)||162;
+  const w=parseFloat(document.getElementById("tdee-weight").value)||47;
+  const act=parseFloat(document.getElementById("tdee-activity").value)||1.375;
+  const bmr=Math.round(10*w+6.25*h-5*age-161);
+  const tdee=Math.round(bmr*act);
+  document.getElementById("tdee-bmr").textContent=bmr;
+  document.getElementById("tdee-tdee").textContent=tdee;
+  document.getElementById("tdee-gain").textContent=tdee+250;
+  toast("TDEE calculated! ⚡");
+}
+
+// =============================================
+// LEARN
+// =============================================
+const KNOW_SECTIONS=["body","booty","vaghealth","nutrition","hormones","sleep"];
+function showKnow(section){
+  KNOW_SECTIONS.forEach(s=>{
+    document.getElementById("know-"+s).style.display=s===section?"block":"none";
+    const btn=document.getElementById("kt-"+s);
+    if(s===section){btn.style.background="var(--pink)";btn.style.color="#0a0c12";btn.style.border="none";}
+    else{btn.style.background="var(--card)";btn.style.color="var(--sub)";btn.style.border="1px solid var(--border)";}
+  });
+}
+
+// =============================================
+// SOUND
+// =============================================
+function beep(freq,dur,vol){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+dur);
+    o.start();o.stop(ctx.currentTime+dur);
+  }catch{}
+}
+document.addEventListener("touchstart",()=>{try{new(window.AudioContext||window.webkitAudioContext)();}catch{}},{once:true});
+
+// =============================================
+// TOAST
+// =============================================
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+// =============================================
+// AUTH
+// =============================================
+function pinInput(el){
+  if(el.value.length>1)el.value=el.value.slice(-1);
+  el.value=el.value.replace(/[^0-9]/g,"");
+  el.style.borderColor=el.value?"var(--pink)":"var(--border)";
+  const boxes=[...el.closest("[id$='-pin-boxes']").querySelectorAll(".pin-input")];
+  const idx=boxes.indexOf(el);
+  if(el.value&&idx<boxes.length-1)boxes[idx+1].focus();
+  if(el.value&&idx===boxes.length-1){
+    const isSignIn=el.closest("#si-pin-boxes");
+    if(isSignIn)authSignIn();
+  }
+}
+function pinBack(e,el){
+  if(e.key==="Backspace"&&!el.value){
+    const boxes=[...el.closest("[id$='-pin-boxes']").querySelectorAll(".pin-input")];
+    const idx=boxes.indexOf(el);
+    if(idx>0){boxes[idx-1].focus();boxes[idx-1].value="";boxes[idx-1].style.borderColor="var(--border)";}
+  }
+}
+function getPin(prefix){return[...document.getElementById(prefix+"-pin-boxes").querySelectorAll(".pin-input")].map(i=>i.value).join("");}
+
+async function authSignIn(){
+  const email=document.getElementById("si-email").value.trim();
+  const pin=getPin("si");
+  const err=document.getElementById("si-err");
+  const btn=document.getElementById("si-btn");
+  err.style.display="none";
+  if(!email){err.textContent="Enter email";err.style.display="block";return;}
+  if(pin.length<6){err.textContent="Enter 6-digit PIN";err.style.display="block";return;}
+  btn.textContent="...";btn.disabled=true;
+  try{
+    const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=password`,{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({email,password:pin})});
+    const d=await r.json();
+    if(d.access_token){
+      sb.token=d.access_token;sb.uid=d.user.id;
+      localStorage.setItem("tt_token",d.access_token);localStorage.setItem("tt_uid",d.user.id);
+      localStorage.setItem("tt_last_login",Date.now().toString());
+      if(d.refresh_token)localStorage.setItem("tt_refresh",d.refresh_token);
+      document.getElementById("auth-screen").style.display="none";
+      toast("Let's glow 🌸");
+      showApp();setTimeout(()=>afterAuth(),300);
+    }else{err.textContent=d.error_description||"Wrong email or PIN";err.style.display="block";}
+  }catch(e){err.textContent="Sign in failed";err.style.display="block";}
+  btn.textContent="Let's Glow 🌸";btn.disabled=false;
+}
+
+async function authSignUp(){
+  const email=document.getElementById("su-email").value.trim();
+  const pin=getPin("su");
+  const err=document.getElementById("su-err");
+  const btn=document.getElementById("su-btn");
+  err.style.display="none";
+  if(!email){err.textContent="Enter email";err.style.display="block";return;}
+  if(pin.length<6){err.textContent="Set 6-digit PIN";err.style.display="block";return;}
+  btn.textContent="...";btn.disabled=true;
+  try{
+    const r=await fetch(`${SB_URL}/auth/v1/signup`,{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({email,password:pin})});
+    const d=await r.json();
+    if(d.access_token){
+      sb.token=d.access_token;sb.uid=d.user.id;
+      localStorage.setItem("tt_token",d.access_token);localStorage.setItem("tt_uid",d.user.id);
+      localStorage.setItem("tt_last_login",Date.now().toString());
+      if(d.refresh_token)localStorage.setItem("tt_refresh",d.refresh_token);
+      document.getElementById("auth-screen").style.display="none";
+      toast("Account created! 🌸");
+      showApp();setTimeout(()=>afterAuth(),300);
+    }else{err.textContent=d.message||d.error_description||"Sign up failed";err.style.display="block";}
+  }catch(e){err.textContent="Sign up failed";err.style.display="block";}
+  btn.textContent="Create Account";btn.disabled=false;
+}
+
+function showApp(){
+  document.getElementById("main-header").style.display="flex";
+  document.getElementById("main-app").style.display="block";
+  document.getElementById("main-nav").style.display="flex";
+}
+
+async function afterAuth(){
+  try{await syncFromCloud();}catch(e){console.warn("Sync failed:",e);}
+  WLOG=lsGet(SK.weight,[{d:"Start",w:47}]);
+  FOOD_LOG=lsGet(SK.food,[]);
+  PROGRESS_PHOTOS=lsGet(SK.photos,{});
+  renderProgressTab();renderFoodRing();renderBurnTab();
+  document.getElementById("sync-badge").textContent="☁ ✓";
+  document.getElementById("sync-badge").style.color="var(--green)";
+}
+
+// =============================================
+// INIT
+// =============================================
+function initApp(){
+  updateDayBadge();
+  initWorkout();
+  initMealPlan();
+  filterDishes();
+  renderFoodRing();
+  renderProgressTab();
+  renderBurnTab();
+  estimateBurn();
+  calcTDEE();
+}
+
+// SPLASH + AUTH
+window.addEventListener("load",()=>{
+  setTimeout(()=>document.getElementById("splash-bar").style.width="100%",50);
+  setTimeout(()=>{
+    const s=document.getElementById("splash");
+    s.style.transition="opacity 0.5s";s.style.opacity="0";
+    setTimeout(()=>{
+      s.style.display="none";
+      // Check cached session
+      const cachedToken=localStorage.getItem("tt_token");
+      const cachedUid=localStorage.getItem("tt_uid");
+      const lastLogin=localStorage.getItem("tt_last_login");
+      const valid=cachedToken&&cachedUid&&lastLogin&&(Date.now()-parseInt(lastLogin))<86400000;
+      if(valid){
+        sb.token=cachedToken;sb.uid=cachedUid;
+        showApp();initApp();
+        setTimeout(async()=>{try{await sb.refreshSession();}catch(e){}try{await afterAuth();}catch(e){}},300);
+      }else{
+        document.getElementById("auth-screen").style.display="flex";
+        // Still init app (will show after auth)
+        initApp();
+      }
+    },500);
+  },2000);
+});
+</script>
+</body>
+</html>
