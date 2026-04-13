@@ -101,6 +101,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
 </div>
 <div id="toast"></div>
 
+<!-- QUOTE SCREEN -->
+<div id="quote-screen" style="display:none;position:fixed;inset:0;z-index:998;background:radial-gradient(ellipse at 50% 40%,rgba(168,85,247,0.1),transparent 70%),#0a0c12;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;">
+  <div style="animation:fadeUp 0.8s ease both;">
+    <div style="font-size:48px;margin-bottom:24px;">🌸</div>
+    <div id="quote-text" style="font-size:18px;color:var(--txt);line-height:1.7;font-style:italic;max-width:320px;margin:0 auto;font-family:'Manrope',sans-serif;"></div>
+    <div id="quote-author" style="font-size:13px;color:var(--pink);font-weight:700;margin-top:16px;"></div>
+    <button onclick="dismissQuote()" style="margin-top:40px;background:linear-gradient(135deg,#ff5c9d,#c8336e);color:white;border:none;padding:16px 48px;border-radius:50px;font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:900;cursor:pointer;box-shadow:0 0 30px rgba(255,92,157,0.3);letter-spacing:0.5px;">Let's Go 🌸</button>
+  </div>
+</div>
+
 <!-- AUTH SCREEN -->
 <div id="auth-screen" class="fixed inset-0 z-[1000] flex flex-col items-center justify-center px-6" style="position:fixed;inset:0;z-index:1000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% 30%,rgba(255,92,157,0.07),transparent 70%),#0a0c12">
   <div style="width:100%;max-width:340px;animation:fadeUp 0.5s ease both">
@@ -415,25 +425,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;heigh
   <div class="card" style="padding:14px;">
     <div style="font-size:12px;font-weight:700;color:var(--sub);margin-bottom:12px;">BURN HISTORY</div>
     <div id="burn-log-list"><div style="text-align:center;padding:20px;color:var(--sub);font-size:13px;">No burns logged yet 🔥</div></div>
-  </div>
-
-  <!-- TDEE quick calc -->
-  <div class="card" style="padding:16px;margin-top:14px;">
-    <div style="font-size:12px;font-weight:700;color:var(--pink);margin-bottom:14px;">⚡ TDEE CALCULATOR</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">AGE</div><input id="tdee-age" type="number" value="22" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/></div>
-      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">HEIGHT (cm)</div><input id="tdee-height" type="number" value="162" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/></div>
-      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">WEIGHT (kg)</div><input id="tdee-weight" type="number" value="47" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:15px;font-family:'Space Grotesk',sans-serif;font-weight:700;outline:none;text-align:center;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/></div>
-      <div><div style="font-size:11px;color:var(--sub);margin-bottom:6px;">ACTIVITY</div><select id="tdee-activity" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:10px;padding:10px;font-size:12px;font-family:'Manrope',sans-serif;outline:none;"><option value="1.2">Sedentary</option><option value="1.375" selected>Light active</option><option value="1.55">Moderate</option><option value="1.725">Very active</option></select></div>
-    </div>
-    <button onclick="calcTDEE()" class="btn-pink" style="width:100%;margin-bottom:14px;">Calculate</button>
-    <div id="tdee-result" style="background:var(--card2);border-radius:12px;padding:14px;display:flex;justify-content:space-around;text-align:center;">
-      <div><div style="font-size:20px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--pink);" id="tdee-bmr">-</div><div style="font-size:10px;color:var(--sub);">BMR</div></div>
-      <div style="width:1px;background:var(--border);"></div>
-      <div><div style="font-size:20px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--green);" id="tdee-tdee">-</div><div style="font-size:10px;color:var(--sub);">TDEE</div></div>
-      <div style="width:1px;background:var(--border);"></div>
-      <div><div style="font-size:20px;font-weight:900;font-family:'Space Grotesk',sans-serif;color:var(--yellow);" id="tdee-gain">-</div><div style="font-size:10px;color:var(--sub);">+250 Gain</div></div>
-    </div>
   </div>
 </div>
 
@@ -908,8 +899,81 @@ let currentDishCat = "all";
 let curMealDay = 0;
 
 // =============================================
-// DAY COUNTER (auto-advances)
+// 30 SPIRITUAL MOTIVATION QUOTES
 // =============================================
+const QUOTES = [
+  {q:"The body is your temple. Keep it pure and clean for the soul to reside in.",a:"B.K.S. Iyengar"},
+  {q:"She remembered who she was and the game changed.",a:"Lalah Delia"},
+  {q:"You were not made to be small. You were made to bloom.",a:"Unknown"},
+  {q:"The wound is the place where the light enters you.",a:"Rumi"},
+  {q:"Your body holds deep wisdom. Trust in it. Learn from it.",a:"Bella Bleue"},
+  {q:"What lies behind us and what lies before us are tiny matters compared to what lies within us.",a:"Ralph Waldo Emerson"},
+  {q:"The universe is not outside of you. Look inside yourself; everything that you want, you already are.",a:"Rumi"},
+  {q:"She believed she could, so she did.",a:"R.S. Grey"},
+  {q:"You are the one you have been waiting for.",a:"Byron Katie"},
+  {q:"Strong women don't have attitudes. They have standards.",a:"Unknown"},
+  {q:"The soul always knows what to do to heal itself. The challenge is to silence the mind.",a:"Caroline Myss"},
+  {q:"Do not feel lonely, the entire universe is inside you.",a:"Rumi"},
+  {q:"Your task is not to seek for love, but to find all the barriers within yourself that you have built against it.",a:"Rumi"},
+  {q:"When you do things from your soul, you feel a river moving in you, a joy.",a:"Rumi"},
+  {q:"I am not what happened to me. I am what I choose to become.",a:"Carl Jung"},
+  {q:"The flower that blooms in adversity is the most rare and beautiful of all.",a:"Mulan"},
+  {q:"Be gentle with yourself, you are doing the best you can.",a:"Unknown"},
+  {q:"Stars can't shine without darkness.",a:"Unknown"},
+  {q:"Your body is precious. It is your vehicle for awakening. Treat it with care.",a:"Buddha"},
+  {q:"The only person you are destined to become is the person you decide to be.",a:"Emerson"},
+  {q:"Nothing can dim the light that shines from within.",a:"Maya Angelou"},
+  {q:"Inhale confidence, exhale doubt.",a:"Unknown"},
+  {q:"She turned her wounds into wisdom.",a:"Oprah Winfrey"},
+  {q:"A woman who walks in purpose doesn't have to chase people or opportunities. Her light causes people and opportunities to pursue her.",a:"Unknown"},
+  {q:"Growth is uncomfortable; you have to embrace the discomfort if you want to expand.",a:"Unknown"},
+  {q:"The lotus flower blooms most beautifully from the deepest and thickest mud.",a:"Buddhist Proverb"},
+  {q:"Let your faith be bigger than your fear.",a:"Unknown"},
+  {q:"You are confined only by the walls you build yourself.",a:"Andrew Murphy"},
+  {q:"Every morning you have two choices: continue to sleep with your dreams, or wake up and chase them.",a:"Unknown"},
+  {q:"She is clothed in strength and dignity, and she laughs without fear of the future.",a:"Proverbs 31:25"},
+];
+function getDailyQuote(){return QUOTES[Math.floor(Date.now()/86400000)%QUOTES.length];}
+
+// =============================================
+// DAY-SPECIFIC WARMUPS
+// =============================================
+const WARMUPS = {
+  upper:[
+    {name:"Arm Circles",detail:"15 each direction",icon:"yoga",col:"#00e5a0"},
+    {name:"Shoulder Rolls",detail:"10 forward + 10 back",icon:"yoga",col:"#00e5a0"},
+    {name:"Band Pull-Aparts",detail:"15 reps · light band",icon:"row",col:"#00e5a0"},
+  ],
+  lower:[
+    {name:"Hip Circles",detail:"10 each side",icon:"squat",col:"#00e5a0"},
+    {name:"Bodyweight Squats",detail:"15 reps · slow",icon:"squat",col:"#00e5a0"},
+    {name:"Glute Bridges",detail:"12 reps · squeeze at top",icon:"thrust",col:"#00e5a0"},
+  ],
+  cardio:[
+    {name:"March on Spot",detail:"2 minutes",icon:"run",col:"#00e5a0"},
+    {name:"Ankle Circles",detail:"10 each side",icon:"yoga",col:"#00e5a0"},
+    {name:"Knee Hugs",detail:"10 each leg",icon:"squat",col:"#00e5a0"},
+  ],
+  upper2:[
+    {name:"Cat-Cow Stretch",detail:"10 reps",icon:"yoga",col:"#00e5a0"},
+    {name:"Thoracic Rotations",detail:"8 each side",icon:"yoga",col:"#00e5a0"},
+    {name:"Light Band Rows",detail:"15 reps",icon:"row",col:"#00e5a0"},
+  ],
+  lower2:[
+    {name:"Hip Flexor Stretch",detail:"30s each side",icon:"yoga",col:"#00e5a0"},
+    {name:"Clamshells",detail:"15 each side",icon:"kick",col:"#00e5a0"},
+    {name:"Fire Hydrants",detail:"12 each side",icon:"kick",col:"#00e5a0"},
+  ],
+  full:[
+    {name:"Jumping Jacks",detail:"30 seconds",icon:"jump",col:"#00e5a0"},
+    {name:"Inchworms",detail:"6 reps",icon:"yoga",col:"#00e5a0"},
+    {name:"Bodyweight Lunges",detail:"10 total",icon:"squat",col:"#00e5a0"},
+  ],
+  rest:[
+    {name:"Deep Breathing",detail:"5 slow breaths",icon:"yoga",col:"#a855f7"},
+    {name:"Neck Rolls",detail:"5 each direction",icon:"yoga",col:"#a855f7"},
+  ],
+};
 function getProgramDay(){
   let start = lsGet(SK.programStart, null);
   if(!start){
@@ -1003,27 +1067,54 @@ function renderExercises(){
   const rest=CUR_WEEK<=2?45:CUR_WEEK<=4?40:35;
   const isCardio=(day.k==="cardio"||day.k==="rest");
 
-  // Daily 20min cardio reminder
-  let html=`<div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+  // Daily quote
+  const q=getDailyQuote();
+  let html=`<div style="background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(255,92,157,0.08));border:1px solid rgba(168,85,247,0.2);border-radius:14px;padding:14px 16px;margin-bottom:14px;">
+    <div style="font-size:13px;color:var(--txt);line-height:1.6;font-style:italic;">"${q.q}"</div>
+    <div style="font-size:11px;color:var(--pink);font-weight:700;margin-top:6px;">— ${q.a}</div>
+  </div>`;
+
+  // Daily cardio reminder
+  html+=`<div style="background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;">
     <span style="font-size:20px;">⚡</span>
     <div style="flex:1;"><div style="font-size:11px;font-weight:800;color:var(--green);">DAILY CARDIO · 20 MIN</div><div style="font-size:11px;color:var(--sub);">Run · Walk · Dance · Cycle · Swim</div></div>
     <button id="daily-cardio-btn" onclick="toggleDailyCardio()" style="background:${lsGet(SK.cardioDone+new Date().toDateString(),'false')==='true'?'var(--green)':'var(--card2)'};border:1px solid var(--border);color:${lsGet(SK.cardioDone+new Date().toDateString(),'false')==='true'?'#0a0c12':'var(--sub)'};padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0;">${lsGet(SK.cardioDone+new Date().toDateString(),'false')==='true'?'✓ Done':'○ Log'}</button>
   </div>`;
 
+  // Warmups for this day
+  const dayWarmups=WARMUPS[day.k]||[];
+  if(dayWarmups.length){
+    html+=`<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:800;color:var(--green);letter-spacing:0.5px;margin-bottom:8px;">🧘 WARM UP</div>`;
+    dayWarmups.forEach((w,wi)=>{
+      const wDone=savedData[`wu_${wi}`]||false;
+      html+=`<div style="background:rgba(0,229,160,0.06);border:1px solid rgba(0,229,160,0.15);border-radius:12px;padding:10px 14px;margin-bottom:6px;display:flex;align-items:center;gap:10px;${wDone?'opacity:0.4;':''}">
+        <div style="width:36px;height:36px;border-radius:10px;background:rgba(0,229,160,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">${getExIcon(w.icon,"#00e5a0")}</div>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:700;">${w.name}</div><div style="font-size:11px;color:var(--sub);">${w.detail}</div></div>
+        <button onclick="toggleWarmup(${wi})" style="width:30px;height:30px;border-radius:50%;border:2px solid ${wDone?'var(--green)':'var(--border)'};background:${wDone?'var(--green)':'transparent'};color:${wDone?'#0a0c12':'var(--sub)'};cursor:pointer;font-size:14px;font-weight:900;flex-shrink:0;">${wDone?'✓':'○'}</button>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+
   if(!exercises.length){html+="<div style='text-align:center;padding:40px;color:var(--sub);'>Rest up, queen 🌸</div>";}
   else{
+    html+=`<div style="font-size:11px;font-weight:800;color:var(--pink);letter-spacing:0.5px;margin-bottom:8px;">💪 WORKOUT</div>`;
     exercises.forEach((ex,i)=>{
       const varIdx=VARS[`${CUR_WEEK}_${CUR_DAY}_${i}`]||0;
       const name=ex.v[varIdx]||ex.v[0];
       const done=savedData[`done_${i}`]||false;
       const wt=savedData[`wt_${i}`]||"";
+      const ytUrl=`https://www.youtube.com/results?search_query=${encodeURIComponent(name+' exercise form women')}`;
       html+=`
-      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;border-left:3px solid ${ex.col};${done?"opacity:0.55;":""}transition:opacity 0.3s;">
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:12px;border-left:3px solid ${ex.col};${done?"opacity:0.45;":""}transition:opacity 0.3s;">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
           <div class="ex-icon-wrap" style="background:${ex.col}18;">${getExIcon(ex.icon,ex.col)}</div>
           <div style="flex:1;">
             <div style="font-size:10px;color:var(--sub);font-weight:600;margin-bottom:2px;letter-spacing:0.5px;">${ex.slot}</div>
-            <div style="font-size:15px;font-weight:800;">${name}</div>
+            <a href="${ytUrl}" target="_blank" style="font-size:15px;font-weight:800;color:var(--txt);text-decoration:none;${done?'text-decoration:line-through;color:var(--sub);':''}">
+              ${name}
+              ${!done?`<svg style="display:inline;margin-left:4px;vertical-align:middle" width="10" height="10" viewBox="0 0 24 24" fill="var(--pink)" opacity="0.5"><path d="M23.495 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`:''}
+            </a>
           </div>
           <button onclick="markDone(${i})" style="width:38px;height:38px;border-radius:50%;border:2px solid ${done?"var(--pink)":"var(--border)"};background:${done?"var(--pink)":"transparent"};color:${done?"#0a0c12":"var(--sub)"};cursor:pointer;font-size:16px;font-weight:900;transition:all 0.2s;flex-shrink:0;">${done?"✓":"○"}</button>
         </div>
@@ -1035,7 +1126,7 @@ function renderExercises(){
           </div>
         </div>
         ${!isCardio?`<div style="display:flex;align-items:center;gap:8px;">
-          <input type="number" step="0.5" placeholder="Weight (kg)" value="${wt}" onchange="saveWt(${i},this.value)" style="flex:1;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
+          <input type="number" step="0.5" placeholder="Weight (kg)" value="${wt}" onchange="saveWt(${i},this.value)" style="flex:1;background:var(--card2);border:1px solid ${wt?'var(--pink)':'var(--border)'};color:${wt?'var(--pink)':'var(--txt)'};border-radius:8px;padding:8px 10px;font-size:13px;font-family:'Manrope',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--pink)'" onblur="this.style.borderColor='var(--border)'"/>
           <span style="font-size:12px;color:var(--sub);">kg</span>
         </div>`:""}
       </div>`;
@@ -1065,7 +1156,13 @@ function markDone(i){
   renderExercises();
   beep(440,0.1,0.3);
 }
-function saveWt(i,val){const data=lsGet(SK.workout(CUR_DAY,CUR_WEEK),{});data[`wt_${i}`]=val;lsSet(SK.workout(CUR_DAY,CUR_WEEK),data);}
+function saveWt(i,val){const data=lsGet(SK.workout(CUR_DAY,CUR_WEEK),{});data[`wt_${i}`]=val;lsSet(SK.workout(CUR_DAY,CUR_WEEK),data);saveWorkoutToCloud(CUR_WEEK,CUR_DAY,data);}
+function toggleWarmup(i){
+  const data=lsGet(SK.workout(CUR_DAY,CUR_WEEK),{});
+  data[`wu_${i}`]=!data[`wu_${i}`];
+  lsSet(SK.workout(CUR_DAY,CUR_WEEK),data);
+  renderExercises();
+}
 function swapEx(i,dir){
   const ex=LIB[DAYS_DEF[CUR_DAY].k]?.[i];if(!ex)return;
   const key=`${CUR_WEEK}_${CUR_DAY}_${i}`;
@@ -1465,19 +1562,6 @@ function renderBurnLogList(){
 
 function removeBurnEntry(i){BURN_LOG.splice(i,1);lsSet(SK.burnLog,BURN_LOG);renderBurnTab();}
 
-function calcTDEE(){
-  const age=parseFloat(document.getElementById("tdee-age").value)||22;
-  const h=parseFloat(document.getElementById("tdee-height").value)||162;
-  const w=parseFloat(document.getElementById("tdee-weight").value)||47;
-  const act=parseFloat(document.getElementById("tdee-activity").value)||1.375;
-  const bmr=Math.round(10*w+6.25*h-5*age-161);
-  const tdee=Math.round(bmr*act);
-  document.getElementById("tdee-bmr").textContent=bmr;
-  document.getElementById("tdee-tdee").textContent=tdee;
-  document.getElementById("tdee-gain").textContent=tdee+250;
-  toast("TDEE calculated! ⚡");
-}
-
 // =============================================
 // LEARN
 // =============================================
@@ -1618,10 +1702,26 @@ function initApp(){
   renderProgressTab();
   renderBurnTab();
   estimateBurn();
-  calcTDEE();
 }
 
-// SPLASH + AUTH
+function dismissQuote(){
+  document.getElementById("quote-screen").style.display="none";
+  // Check cached session
+  const cachedToken=localStorage.getItem("tt_token");
+  const cachedUid=localStorage.getItem("tt_uid");
+  const lastLogin=localStorage.getItem("tt_last_login");
+  const valid=cachedToken&&cachedUid&&lastLogin&&(Date.now()-parseInt(lastLogin))<86400000;
+  if(valid){
+    sb.token=cachedToken;sb.uid=cachedUid;
+    showApp();initApp();
+    setTimeout(async()=>{try{await sb.refreshSession();}catch(e){}try{await afterAuth();}catch(e){}},300);
+  }else{
+    document.getElementById("auth-screen").style.display="flex";
+    initApp();
+  }
+}
+
+// SPLASH → QUOTE → AUTH/APP
 window.addEventListener("load",()=>{
   setTimeout(()=>document.getElementById("splash-bar").style.width="100%",50);
   setTimeout(()=>{
@@ -1629,20 +1729,11 @@ window.addEventListener("load",()=>{
     s.style.transition="opacity 0.5s";s.style.opacity="0";
     setTimeout(()=>{
       s.style.display="none";
-      // Check cached session
-      const cachedToken=localStorage.getItem("tt_token");
-      const cachedUid=localStorage.getItem("tt_uid");
-      const lastLogin=localStorage.getItem("tt_last_login");
-      const valid=cachedToken&&cachedUid&&lastLogin&&(Date.now()-parseInt(lastLogin))<86400000;
-      if(valid){
-        sb.token=cachedToken;sb.uid=cachedUid;
-        showApp();initApp();
-        setTimeout(async()=>{try{await sb.refreshSession();}catch(e){}try{await afterAuth();}catch(e){}},300);
-      }else{
-        document.getElementById("auth-screen").style.display="flex";
-        // Still init app (will show after auth)
-        initApp();
-      }
+      // Show quote screen
+      const q=getDailyQuote();
+      document.getElementById("quote-text").textContent=`"${q.q}"`;
+      document.getElementById("quote-author").textContent=`— ${q.a}`;
+      document.getElementById("quote-screen").style.display="flex";
     },500);
   },2000);
 });
